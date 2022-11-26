@@ -4,11 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.TableLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import app.krys.bookspaceapp.databinding.FragmentHomeBinding
-import com.google.android.material.snackbar.Snackbar
+import app.krys.bookspaceapp.ui.adapter.home.HomePagerAdapter
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeFragment : Fragment() {
 
@@ -17,6 +20,10 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    private lateinit var homePagerAdapter: HomePagerAdapter
+    private lateinit var viewPager: ViewPager2
+    private lateinit var tabLayout: TabLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,6 +38,24 @@ class HomeFragment : Fragment() {
 
 
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        homePagerAdapter = HomePagerAdapter(this)
+        viewPager = binding.viewPager
+        viewPager.adapter = homePagerAdapter
+        tabLayout = binding.tabLayout
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = when (position) {
+                0 -> "Recent"
+                1 -> "My Space"
+                2 -> "Favourite"
+                else -> "Recent"
+            }
+
+        }.attach()
+
     }
 
     override fun onDestroyView() {
