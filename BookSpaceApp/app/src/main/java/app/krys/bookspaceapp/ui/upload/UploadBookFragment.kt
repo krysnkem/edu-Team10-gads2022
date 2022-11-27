@@ -13,7 +13,6 @@ import app.krys.bookspaceapp.R
  */
 class UploadBookFragment : Fragment() {
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

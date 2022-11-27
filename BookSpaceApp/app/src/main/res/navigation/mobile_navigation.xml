@@ -9,7 +9,11 @@
         android:id="@+id/nav_home"
         android:name="app.krys.bookspaceapp.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_uploadBookFragment"
+            app:destination="@id/uploadBookFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_gallery"
@@ -22,4 +26,14 @@
         android:name="app.krys.bookspaceapp.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+    <fragment
+        android:id="@+id/mySpaceFragment"
+        android:name="app.krys.bookspaceapp.ui.myspace.MySpaceFragment"
+        android:label="My Space"
+        tools:layout="@layout/fragment_my_space" />
+    <fragment
+        android:id="@+id/uploadBookFragment"
+        android:name="app.krys.bookspaceapp.ui.upload.UploadBookFragment"
+        android:label="Upload a book"
+        tools:layout="@layout/fragment_upload_book" />
 </navigation>
