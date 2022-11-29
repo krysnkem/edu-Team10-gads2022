@@ -10,12 +10,16 @@ import app.krys.bookspaceapp.ui.recent.RecentFragment
  * [HomePagerAdapter] handles the UI related to the Home view
  * */
 
-class HomePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
-    private val fragmentList: List<Fragment> = listOf(
-        RecentFragment(),
-        MySpaceFragment(),
-        FavouritesFragment()
-    )
+class HomePagerAdapter : FragmentStateAdapter {
+    constructor(fragment: Fragment) : super(fragment) {
+        this.fragmentList = listOf(
+            RecentFragment(),
+            MySpaceFragment(),
+            FavouritesFragment()
+        )
+    }
+
+    private val fragmentList: List<Fragment>
 
     override fun getItemCount(): Int {
         return fragmentList.size
