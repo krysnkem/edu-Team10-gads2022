@@ -11,4 +11,6 @@
 
     <color name="blue_accent">#FF20BCD3</color>
     <color name="reader_text_color">#FF757575</color>
+    <color name="light_gray_900">#E1E3E5</color>
+    <color name="colorBackgroundTin">#75000000</color>
 </resources>

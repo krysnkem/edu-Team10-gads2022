@@ -12,4 +12,35 @@
     <string name="menu_slideshow">Slideshow</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label_email">Email address</string>
+    <string name="label_password">Enter password</string>
+    <string name="label_create_password">Create password</string>
+    <string name="label_confirm_password">Confirm password</string>
+    <string name="app_logo_img">app logo</string>
+    <string name="application_name">BOOK SPACE</string>
+    <string name="user_registration">Register</string>
+    <string name="register_button">Register</string>
+    <string name="forgot_password_button">Forgot Password?</string>
+    <string name="social_accounts">Or Continue with Social Accounts</string>
+    <string name="google_sign_in_button">google sign button</string>
+    <string name="facebook_sign_in_button">facebook sign-in button</string>
+    <string name="twitter_sign_in_button">twitter sign-in button</string>
+    <string name="login_button">Login</string>
+    <string name="register_activity_field_isEmpty">Field cannot be empty</string>
+    <string name="register_activity_password_matching">Password does not match</string>
+
+    <style name="SHA1">66:C5:D4:23:0E:11:E7:E9:8F:A8:31:FF:4F:48:5C:6D:65:5F:51:FD</style>
+    <style name="MD5">11:58:FE:E3:9C:B1:BF:47:09:11:D8:E1:10:D3:7A:3B</style>
+
+    <!-- Firebase Database Nodes -->
+    <string name="db_node_users">users</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="cancel_action_button">cancel action button</string>
+    <string name="resend_email_button">Resend</string>
+    <string name="action_resend_email_button">Resend Email Button</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="action_login">Login</string>
+    <string name="log_in">Log in</string>
+    <string name="label_enter_password">Enter password</string>
+    <string name="authentication_failure">Authentication failed!</string>
 </resources>

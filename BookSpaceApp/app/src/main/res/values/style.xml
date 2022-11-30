@@ -12,4 +12,18 @@
         <item name="textAllCaps">false</item>
         <item name="android:textAllCaps">false</item>
     </style>
+
+    <style name="Widget.BookSpace.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/blue_accent</item>
+    </style>
+
+    <style name="Widget.BookSpace.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/blue_accent</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Widget.BookSpace.SocialButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/light_gray_900</item>
+    </style>
 </resources>

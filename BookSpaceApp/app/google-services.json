@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "269928061171",
+    "project_id": "book-space-app",
+    "storage_bucket": "book-space-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:269928061171:android:d6e4bef68cf8b3c9943f86",
+        "android_client_info": {
+          "package_name": "app.krys.bookspaceapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "269928061171-7iud6286f4istoq7u008cbtq7mgca58c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.krys.bookspaceapp",
+            "certificate_hash": "66c5d4230e11e7e98fa831ff4f485c6d655f51fd"
+          }
+        },
+        {
+          "client_id": "269928061171-h9pl5fpu4h3tm4nglb1pls28vdj8k0eh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIDquqd3Qa_A-qcsvSuh7H-3US5ZEMZS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "269928061171-h9pl5fpu4h3tm4nglb1pls28vdj8k0eh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

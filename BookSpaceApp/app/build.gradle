@@ -1,7 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.gms.google-services' // Plugin for google services
+    id 'androidx.navigation.safeargs.kotlin'  // Navigation Plugin for safe args
 }
 
 android {
@@ -43,15 +44,52 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 
     //viewpager dependency
     implementation "androidx.viewpager2:viewpager2:1.0.0"
+
+    // Navigation libraries
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    // For lifecycle libraries
+    def lifecycle_version = "2.5.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+
+    // Circle Image View
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    // Universal Image Loader
+    //implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+
+    // Glide: Image processor
+    def image_processor_version = "4.13.2"
+    implementation "com.github.bumptech.glide:glide:$image_processor_version"
+    annotationProcessor "com.github.bumptech.glide:compiler:$image_processor_version"
+
+    // User preference settings
+    // implementation "androidx.preference:preference:1.2.0"
+
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:31.1.0')
+    // implementation 'com.google.firebase:firebase-analytics-ktx'
+    // FirebaseAuth Authentication
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    // Firebase Real-time Database
+    implementation 'com.google.firebase:firebase-database-ktx'
+    // Add the dependency for the Cloud Storage library
+    implementation 'com.google.firebase:firebase-storage-ktx'
+
+    // FirebaseUI Authentication
+    implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
+
+    // FirebaseUI Authentication: Facebook Login
+    // implementation 'com.facebook.android:facebook-login:15.1.0'
+    implementation 'com.facebook.android:facebook-login:8.1.0'
+    // implementation 'com.facebook.android:facebook-android-sdk:15.0.1'
 
 }
