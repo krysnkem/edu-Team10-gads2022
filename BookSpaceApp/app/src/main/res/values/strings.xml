@@ -13,4 +13,13 @@
     <string name="create">Create</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_folder">add folder</string>
+    <string name="select_a_folder">Select a folder</string>
+    <string name="select">SELECT</string>
+    <string name="folder">Folder:</string>
+    <string name="upload">UPLOAD</string>
+    <string name="pdf">PDF</string>
+    <string name="placeholder_author_text">John Abiodun</string>
+    <string name="placeholder_book_name_text">Trisa’s Trove</string>
+    <string name="book_image">book image</string>
 </resources>
