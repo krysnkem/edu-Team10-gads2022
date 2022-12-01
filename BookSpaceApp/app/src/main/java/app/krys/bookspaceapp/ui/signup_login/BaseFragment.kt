@@ -40,7 +40,7 @@ open class BaseFragment : DialogFragment() {
     }
 
     fun toastMessage(msg: String) {
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
     }
 
 
