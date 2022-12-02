@@ -73,11 +73,11 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
         if (emailVerificationSender == null)
             emailVerificationSender = EmailVerificationSender(requireActivity())
 
-        initToolbar()
+        initButtons()
     }
 
 
-    private fun initToolbar() {
+    private fun initButtons() {
         binding.registerButton.setOnClickListener(this)
         closeArrowBack.setOnClickListener(this)
         binding.loginButton.setOnClickListener(this)

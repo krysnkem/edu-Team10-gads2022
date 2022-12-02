@@ -67,17 +67,17 @@ class SignupFragment : BaseFragment(), View.OnClickListener  {
             emailVerificationSender = EmailVerificationSender(requireActivity())
 
 
-        initToolbar()
+        initButtons()
     }
 
-    private fun initToolbar() {
+    private fun initButtons() {
         closeArrowBack.setOnClickListener(this)
         binding.registerButton.setOnClickListener(this)
     }
 
 
     private fun createAccount() {
-        this.hideKeyboard(binding.registerActivity)
+        this.hideKeyboard(requireView())
 
         /* Validate input fields
         * Check for empty string */
