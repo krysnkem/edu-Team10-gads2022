@@ -15,6 +15,8 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import app.krys.bookspaceapp.databinding.ActivityMainBinding
 import app.krys.bookspaceapp.ui.signup_login.SignUpLoginActivity
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 
 class MainActivity : AppCompatActivity() {
@@ -43,6 +45,8 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        Firebase.database.setPersistenceEnabled(true)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

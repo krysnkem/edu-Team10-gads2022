@@ -53,5 +53,10 @@
     <string name="log_in">Log in</string>
     <string name="label_enter_password">Enter password</string>
     <string name="authentication_failure">Authentication failed!</string>
+    <string name="new_folder">New Folder</string>
+    <string name="about">About</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="remove">Remove</string>
 
 </resources>

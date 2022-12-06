@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="folder"
+            type="app.krys.bookspaceapp.data.model.FolderInfo" />
+
+        <variable
+            name="listener"
+            type="app.krys.bookspaceapp.ui.adapter.myspace.FolderOptionsClickListener" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="150dp"
+            android:layout_height="160dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:clickable="true"
+            android:elevation="5dp"
+            android:focusable="true"
+            app:cardCornerRadius="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@color/light_gray_900"
+            app:strokeWidth="0.9dp">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="15dp">
+
+                <ImageView
+                    android:id="@+id/folder_imageV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:contentDescription="@string/book_image"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toTopOf="@+id/folder_name_tv"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/folder_icon" />
+
+                <TextView
+                    android:id="@+id/folder_name_tv"
+                    android:layout_width="97dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_bold"
+                    android:maxLines="1"
+                    android:text="@{folder.folderName}"
+                    android:textColor="@color/black"
+                    app:layout_constraintBottom_toTopOf="@+id/textView4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/folder_imageV"
+                    app:layout_constraintTop_toBottomOf="@+id/folder_imageV"
+                    tools:text="Folder1"
+                    tools:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/number_of_files_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
+                    android:maxLines="1"
+                    android:text="@{folder.numberOfFiles.toString()}"
+                    android:textColor="@color/blue_accent"
+                    android:textSize="11sp"
+                    app:layout_constraintStart_toStartOf="@+id/folder_name_tv"
+                    app:layout_constraintTop_toTopOf="@+id/textView4"
+                    tools:text="0" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:fontFamily="@font/roboto"
+                    android:maxLines="1"
+                    android:text="items"
+                    android:textColor="@color/blue_accent"
+                    android:textSize="11sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/number_of_files_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/folder_name_tv" />
+
+                <ImageButton
+                    android:id="@+id/optionsBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:onClick="@{()->listener.onClick(folder)}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/folder_imageV"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_more" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>
+

@@ -17,7 +17,8 @@
         android:layout_width="120dp"
         android:layout_height="190dp"
         android:elevation="6dp"
-        app:strokeColor="@color/black"
+        app:strokeColor="@color/light_gray_900"
+        app:strokeWidth="0.9dp"
         app:cardCornerRadius="4dp">
 
 
@@ -47,6 +48,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/roboto_bold"
                 android:maxLines="1"
+                android:ellipsize="end"
                 tools:text="@string/placeholder_book_name_text"
                 android:textColor="@color/black"
                 tools:textSize="13sp"
