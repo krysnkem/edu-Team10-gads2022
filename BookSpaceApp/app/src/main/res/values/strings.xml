@@ -40,6 +40,7 @@
     <string name="register_activity_password_matching">Password does not match</string>
 
     <style name="SHA1">66:C5:D4:23:0E:11:E7:E9:8F:A8:31:FF:4F:48:5C:6D:65:5F:51:FD</style>
+
     <style name="MD5">11:58:FE:E3:9C:B1:BF:47:09:11:D8:E1:10:D3:7A:3B</style>
 
     <!-- Firebase Database Nodes -->
