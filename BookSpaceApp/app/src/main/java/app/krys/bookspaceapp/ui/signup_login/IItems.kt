@@ -7,6 +7,7 @@ interface IItems {
     fun hideLoginFragment()
 
     fun redirectFromLoginScreenToHome()
+    fun exitAppFromLoginScreen()
 
     fun onBackPressed()
 

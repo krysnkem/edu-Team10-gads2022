@@ -50,9 +50,34 @@
     <string name="resend_email_button">Resend</string>
     <string name="action_resend_email_button">Resend Email Button</string>
     <string name="sign_out">Sign Out</string>
-    <string name="action_login">Login</string>
+    <string name="action_logout">LogOut</string>
+    <string name="action_login">LogIn</string>
     <string name="log_in">Log in</string>
     <string name="label_enter_password">Enter password</string>
     <string name="authentication_failure">Authentication failed!</string>
+    <string name="menu_logout">LogOut</string>
+    <string name="menu_account_settings">Account Settings</string>
+
+    <!-- Dialog Builder -->
+    <string name="confirm_action">Are You Sure You Want To Logout</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="set_action_title">LOGOUT</string>
+    <string name="choose_photo_from_memory">Choose photo from memory</string>
+    <string name="take_photo">Take a Photo</string>
+
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="account_settings">Account Settings</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="upload_photo">Upload Photo</string>
+    <string name="user_name">Firstname and Lastname</string>
+    <string name="current_password">Current Password</string>
+    <string name="save_button">Save</string>
+    <string name="change_password">Change Password</string>
+    <string name="field_profile_image">profile_image</string>
+    <string name="field_name">name</string>
+    <string name="nav_header_edit_button">Edit Button</string>
 
 </resources>
