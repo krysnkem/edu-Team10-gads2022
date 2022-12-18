@@ -42,6 +42,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_acc_setting_title"/>
 
+
+        <ImageButton
+            android:id="@+id/cameraButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorBackgroundTin"
+            android:contentDescription="@string/nav_header_edit_button"
+            android:src="@android:drawable/ic_menu_camera"
+            app:tint="@color/blue_accent"
+            app:layout_constraintBottom_toTopOf="@+id/button_change_photo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.591"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_acc_setting_title"
+            app:layout_constraintVertical_bias="1.0" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_change_photo"
             style="@style/Widget.OneNote.Button.NoBKColor"
@@ -155,10 +171,11 @@
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/profile_image"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/profile_image"
-            app:layout_constraintVertical_bias="0.468" />
+            app:layout_constraintVertical_bias="1.0" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

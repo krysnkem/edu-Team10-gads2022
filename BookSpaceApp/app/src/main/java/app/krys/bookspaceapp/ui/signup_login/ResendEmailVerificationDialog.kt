@@ -15,6 +15,7 @@ import androidx.fragment.app.DialogFragment
 import app.krys.bookspaceapp.R
 import app.krys.bookspaceapp.databinding.EmailVerificationDialogBinding
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth

@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import app.krys.bookspaceapp.MainActivity
 import app.krys.bookspaceapp.R
 import app.krys.bookspaceapp.databinding.ActivitySignUpLoginBinding
+import app.krys.bookspaceapp.ui.account.settings.ResetPasswordDialogFragment
 import app.krys.bookspaceapp.ui.account.settings.UniversalImageLoader
 import com.nostra13.universalimageloader.core.ImageLoader
 
@@ -16,8 +18,9 @@ import com.nostra13.universalimageloader.core.ImageLoader
 class SignUpLoginActivity : AppCompatActivity(), IItems {
 
     private lateinit var binding: ActivitySignUpLoginBinding
-    /** Email verification dialog */
+    /** Email verification and Reset Password dialogs */
     private var resendEmailVerificationDialog: ResendEmailVerificationDialog? = null
+    private var sendEmailResetPasswordLinkDialog: ResetPasswordDialogFragment? = null
 
     /** Fragments */
     private var loginFragment: LoginFragment? = null
@@ -35,11 +38,27 @@ class SignUpLoginActivity : AppCompatActivity(), IItems {
         if (resendEmailVerificationDialog == null )
             resendEmailVerificationDialog = ResendEmailVerificationDialog()
 
+        if (sendEmailResetPasswordLinkDialog == null )
+            sendEmailResetPasswordLinkDialog = ResetPasswordDialogFragment()
+
         inflateLoginFragment()
         initImageLoader()
 
 
     }
+
+    /** START: Reset Password Section */
+    override fun sendEmailResetPasswordLink(fa: FragmentActivity) {
+        sendEmailResetPasswordLinkDialog(fa)
+    }
+
+    private fun sendEmailResetPasswordLinkDialog(fa: FragmentActivity) {
+        // sendEmailResetPasswordLinkDialog!!.isCancelable = false
+        val fragmentManager = fa.supportFragmentManager
+        if (fragmentManager.findFragmentByTag(SEND_RESET_PASSWORD_EMAIL) == null)
+            sendEmailResetPasswordLinkDialog!!.show(fragmentManager, SEND_RESET_PASSWORD_EMAIL)
+    }
+    /** END: Reset Password Section */
 
 
     /**
@@ -105,6 +124,7 @@ class SignUpLoginActivity : AppCompatActivity(), IItems {
         intent.addCategory(Intent.CATEGORY_HOME)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
+        finish()
     }
 
 
@@ -136,6 +156,7 @@ class SignUpLoginActivity : AppCompatActivity(), IItems {
         private const val FRAGMENT_LOGIN = "FRAGMENT LOGIN"
         private const val FRAGMENT_SIGNUP = "FRAGMENT SIGNUP"
         private const val RESEND_EMAIL = "Resend Email verification link"
+        private const val SEND_RESET_PASSWORD_EMAIL = "send Email Reset Password link"
     }
 
 

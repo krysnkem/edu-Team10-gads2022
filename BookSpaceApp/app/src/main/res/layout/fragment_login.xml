@@ -43,7 +43,7 @@
                 android:id="@+id/app_logo"
                 android:layout_width="@dimen/logo_size_horizontal"
                 android:layout_height="@dimen/logo_size_vertical"
-                android:backgroundTint="@color/com_facebook_blue"
+                android:backgroundTint="@color/blue_accent"
                 android:contentDescription="@string/app_logo_img"
                 android:src="@drawable/book_space_logo" />
 

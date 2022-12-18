@@ -1,7 +1,6 @@
 package app.krys.bookspaceapp.ui.account.settings
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -14,20 +13,13 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import app.krys.bookspaceapp.databinding.FragmentChangePhotoDialogBinding
 
 
 class ChangePhotoDialog : DialogFragment() {
 
     private val TAG = this::class.simpleName
-
-
-    interface OnPhotoReceivedListener {
-        fun getImagePath(imagePath: Uri?)
-        fun getImageBitmap(bitmap: Bitmap?)
-    }
-
-    var mOnPhotoReceived: OnPhotoReceivedListener? = null
 
 
     // This property is only valid between onCreateView and onDestroyView.
@@ -47,6 +39,10 @@ class ChangePhotoDialog : DialogFragment() {
             .StartActivityForResult()) {result ->
         onActivityResult(PICK_FILE_REQUEST_CODE, result)
     }
+
+    // Using the activityViewModels() Kotlin property delegate from the
+    // fragment-ktx artifact to retrieve the ViewModel in the activity scope
+    private val imageSelectedViewModel by activityViewModels<PhotoDataViewModel>()
 
 
     override fun onCreateView(
@@ -88,13 +84,13 @@ class ChangePhotoDialog : DialogFragment() {
                     Log.d(TAG,"onActivityResult: image: $selectedImageUri")
 
                     //send the bitmap and fragment to the interface
-                    mOnPhotoReceived!!.getImagePath(selectedImageUri)
+                    imageSelectedViewModel.getImagePath(selectedImageUri!!)
                     dialog!!.dismiss()
                 }
                 CAMERA_REQUEST_CODE -> {
                     Log.d(TAG, "onActivityResult: done taking a photo.")
                     val bitmap: Bitmap? = result.data?.extras!!["data"] as Bitmap?
-                    mOnPhotoReceived!!.getImageBitmap(bitmap)
+                    imageSelectedViewModel.getImageBitmap(bitmap!!)
                     dialog!!.dismiss()
                 }
                 else -> dialog!!.dismiss()
@@ -104,14 +100,11 @@ class ChangePhotoDialog : DialogFragment() {
 
 
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            mOnPhotoReceived = (context as OnPhotoReceivedListener)
-        } catch (e: ClassCastException) {
-            Log.e(TAG, "onAttach: ClassCastException", e.cause)
-        }
+    companion object {
+        const val CAMERA_REQUEST_CODE = 5467 //random number
+        const val PICK_FILE_REQUEST_CODE = 8352 //random number
     }
+
 
 
     override fun onDestroyView() {
@@ -119,8 +112,4 @@ class ChangePhotoDialog : DialogFragment() {
         _binding = null
     }
 
-    companion object {
-        const val CAMERA_REQUEST_CODE = 5467 //random number
-        const val PICK_FILE_REQUEST_CODE = 8352 //random number
-    }
 }

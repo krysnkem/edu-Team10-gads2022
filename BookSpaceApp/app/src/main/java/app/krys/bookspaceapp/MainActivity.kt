@@ -6,8 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageButton
-import android.widget.Toast
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -20,16 +19,24 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import app.krys.bookspaceapp.databinding.ActivityMainBinding
 import app.krys.bookspaceapp.ui.account.settings.AccountSettingsFragment
+import app.krys.bookspaceapp.ui.account.settings.IUser
+import app.krys.bookspaceapp.ui.account.settings.UserDataViewModel
 import app.krys.bookspaceapp.ui.signup_login.LoginViewModel
 import app.krys.bookspaceapp.ui.signup_login.SignUpLoginActivity
+import app.krys.bookspaceapp.ui.signup_login.User
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.nostra13.universalimageloader.core.ImageLoader
+import de.hdodenhof.circleimageview.CircleImageView
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), IUser {
 
     private val TAG = this::class.simpleName
 
@@ -41,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 
     // Get a reference to the ViewModel scoped to this Fragment.
     private val viewModel by viewModels<LoginViewModel>()
+    private val userDataViewModel by viewModels<UserDataViewModel>()
 
     // Firebase
     private lateinit var auth: FirebaseAuth
@@ -80,17 +88,39 @@ class MainActivity : AppCompatActivity() {
 //        }
 
 
+
         // Initialize Fragment
         if (accountSettingsFragment == null) accountSettingsFragment = AccountSettingsFragment()
 
+
+
+        /** Manages nav header section  */
         if (navView.getHeaderView(0) != null) {
+
+            getUserAccountData()
+
             val navHeader = navView.getHeaderView(0)
-            val editProfileButton = navHeader.findViewById<ImageButton>(R.id.edit_button)
-            editProfileButton.setOnClickListener {
-                Toast.makeText(this, "Edit Profile!", Toast.LENGTH_LONG).show()
-                inflateAccountSettingsFragment()
+            // val editProfileButton = navHeader.findViewById<ImageButton>(R.id.edit_button)
+            val name = navHeader.findViewById<TextView>(R.id.user_name)
+            val email = navHeader.findViewById<TextView>(R.id.email)
+            val profileImage = navHeader.findViewById<CircleImageView>(R.id.profile_image)
+            val imageLoader = ImageLoader.getInstance()
+
+            // Get user data for nav header
+            userDataViewModel.userData.observe(this) { user ->
+                name.text = user?.name
+                email.text = user?.email
+                imageLoader.displayImage(user?.profile_image, profileImage)
             }
+
+            // On click, display AccountSettingsFragment
+            /*editProfileButton.setOnClickListener {
+                Navigation.findNavController(this, R.id.nav_host_fragment_content_main)
+                    .navigate(R.id.nav_account_settings)
+                drawerLayout.closeDrawer(GravityCompat.START)
+            }*/
         }
+
 
     }
 
@@ -104,6 +134,7 @@ class MainActivity : AppCompatActivity() {
 //        drawerLayout.closeDrawer(GravityCompat.START)
 //        return true
 //    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -123,6 +154,9 @@ class MainActivity : AppCompatActivity() {
                 displayDialogLogoutConfirmation()
                 true
             }
+            R.id.action_settings -> {
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -130,6 +164,8 @@ class MainActivity : AppCompatActivity() {
 
 
 
+    /** Hide Logout Menu item if the user is authenticated and
+     * show login Menu item if the user is not authenticated, and vise-visa */
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         // super.onPrepareOptionsMenu(menu)
         observeAuthenticationState(menu)
@@ -144,15 +180,8 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-        private fun inflateAccountSettingsFragment() {
-        if (accountSettingsFragment == null) accountSettingsFragment = AccountSettingsFragment()
-        val transaction =  supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.nav_account_settings, accountSettingsFragment!!, "FRAGMENT_ACC_SETTING")
-        transaction.addToBackStack("FRAGMENT_ACC_SETTING")
-        transaction.commit()
-    }
 
-
+    /** LogOut Confirmation dialog display */
     private fun displayDialogLogoutConfirmation() {
         val builder = AlertDialog.Builder(this)
         builder.setMessage(R.string.confirm_action)
@@ -180,6 +209,68 @@ class MainActivity : AppCompatActivity() {
             }.addOnFailureListener {
                 Log.d(TAG, "Unable to sign you out ${it.message}.")
             }
+    }
+
+
+
+    /** -------- Get user data and use them to prefill input views in nav_header_main.xml ----------- */
+    private fun getUserAccountData() {
+
+        val db = FirebaseDatabase.getInstance().reference
+        val user = auth.currentUser
+        Log.d(TAG, "Method 111111111111: Get User Data: ${user?.providerData}")
+
+        if (getSignInProvider(user!!)) {
+
+            var userData: User? = null
+
+            /** Query Method 1 */
+            /**val query2: Query = db.child(getString(R.string.db_node_users))
+            .orderByChild(getString(R.string.field_user_id))
+            .equalTo(user!!.uid)*/
+
+            /** Query Method 1 */
+            val query1: Query = db.child(getString(R.string.db_node_users))
+                .orderByKey()// .orderByValue() for a field value such as 'string'
+                .equalTo(user.uid)
+
+            query1.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    for (singleSnapshot: DataSnapshot in snapshot.children) {
+                        userData = singleSnapshot.getValue<User>()
+                        Log.d(TAG, "Method 1: Get User Data: ${userData.toString()}")
+                    }
+
+                    // Get user data and send the data to observe
+                    userDataViewModel.getUserData(userData)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e(TAG, "ERROR FROM DB: ${error.details}")
+                }
+            })
+
+        } else {
+            // Get user data and send the data to observe
+            val userData = User(name = user.displayName, profile_image = user.photoUrl.toString(), email = user.email)
+            userDataViewModel.getUserData(userData)
+        }
+
+
+    }
+
+
+    override fun updateUserInfo() {
+        getUserAccountData()
+    }
+
+
+    /** Check whether log-in provider is twitter/facebook -- non password login method
+     *  Or email -- password login method  */
+    private fun getSignInProvider(user: FirebaseUser): Boolean {
+        val method = user.getIdToken(false).result.signInProvider
+        return method.equals("password")
     }
 
 
@@ -216,6 +307,7 @@ class MainActivity : AppCompatActivity() {
 
                     menuItemLogin.isVisible = false
                     menuItemLogout.isVisible = true
+
                 }
                 else -> {
 

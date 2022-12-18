@@ -1,23 +1,18 @@
 package app.krys.bookspaceapp.ui.signup_login
 
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ImageButton
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.viewModels
 import app.krys.bookspaceapp.R
 import app.krys.bookspaceapp.databinding.FragmentLoginBinding
 import com.firebase.ui.auth.*
-import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-
 
 
 class LoginFragment : BaseFragment(), View.OnClickListener {
@@ -28,10 +23,12 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
     private lateinit var auth: FirebaseAuth
     private var authListener: FirebaseAuth.AuthStateListener? = null
     private lateinit var authUI: AuthUI
+    //private var signInProviderType = true
     // Form validator
     private var formValidator: FormValidator? = null
     // Send email to new user for verification
     private var emailVerificationSender: EmailVerificationSender? = null
+
 
     private var _binding: FragmentLoginBinding? = null
     private lateinit var closeArrowBack: ImageButton
@@ -39,9 +36,6 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-
-    // Get a reference to the ViewModel scoped to this Fragment.
-    private val viewModel by viewModels<LoginViewModel>()
 
 
     override fun onCreateView(
@@ -81,6 +75,7 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
         if (emailVerificationSender == null)
             emailVerificationSender = EmailVerificationSender(requireActivity())
 
+
         initButtons()
     }
 
@@ -88,6 +83,7 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
     /** Initialize buttons */
     private fun initButtons() {
         binding.registerButton.setOnClickListener(this)
+        binding.forgotPasswordButton.setOnClickListener(this)
         closeArrowBack.setOnClickListener(this)
         binding.loginButton.setOnClickListener(this)
         binding.facebookButton.setOnClickListener(this)
@@ -101,22 +97,20 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
     }
 
 
+
+
     private fun setupFirebaseAuthStateCheck() {
 
         authListener = FirebaseAuth.AuthStateListener {
 
             val user = auth.currentUser
 
-            if (user != null) {
-
+            if (user != null && signInProviderType) {
                 if (user.isEmailVerified) {
-
                     // Redirect User if authentication process is successful
-                    // snackBar(requireView(), "You are logged is ${user.email}")
                     iItems!!.redirectFromLoginScreenToHome()
 
                 } else {
-
                     emailNotVerified()
                 }
             }
@@ -167,7 +161,6 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
 
     override fun onStart() {
         super.onStart()
-        //auth.addAuthStateListener(authListener!!)
         authListener?.let {
             auth.addAuthStateListener(it)
         }
@@ -193,131 +186,13 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
                 iItems!!.inflateSignupFragment()
                 iItems!!.hideLoginFragment()
             }
+            R.id.forgot_password_button -> iItems!!.sendEmailResetPasswordLink(requireActivity())
             R.id.close -> iItems!!.onBackPressed()
             R.id.login_button -> signIn()
             R.id.facebook_button -> snackBar(requireView(), "Coming Soon!")
             R.id.twitter_button -> snackBar(requireView(), "Coming Soon!")
-            R.id.google_button -> this.authUiSignProviders()
+            R.id.google_button -> googleSignProvider()
         }
     }
-
-
-
-
-    /** ----------------------- FirebaseUI Authentication ----------------*/
-    // Helper immutable values for registering startActivityForResult to be Launched
-    private val activityResultForSignIn = registerForActivityResult(
-        FirebaseAuthUIActivityResultContract()
-    ) { result ->
-        this.onActivityResult(result)
-    }
-
-
-    private fun authUiSignProviders() {
-        val providers = arrayListOf(
-            //AuthUI.IdpConfig.EmailBuilder().build(),
-            AuthUI.IdpConfig.GoogleBuilder().build(),
-            // AuthUI.IdpConfig.FacebookBuilder().build()
-        )
-
-        /**
-         * You must provide a custom layout XML resource and configure at least one
-         * provider button ID. It's important that that you set the button ID for every provider
-         * that you have enabled.
-         * com.firebase.ui.auth.R.layout.fui_idp_button_facebook */
-        val customLayout = AuthMethodPickerLayout
-            .Builder(R.layout.fragment_login)
-            .setGoogleButtonId(R.id.google_button)
-            //.setFacebookButtonId(R.id.facebook_button)
-            //.setTwitterButtonId(R.id.twitter_button)
-            //.setTosAndPrivacyPolicyId(R.id.terms_and_conditions)
-            .build()
-
-        val signInIntent = authUI.createSignInIntentBuilder()
-            .setAuthMethodPickerLayout(customLayout) // customized with your own XML layout
-            .setAvailableProviders(providers)
-            .setTheme(com.firebase.ui.auth.R.style.FirebaseUI_DefaultMaterialTheme)
-            .setIsSmartLockEnabled(!BuildConfig.DEBUG, true)
-            .build()
-
-        this.activityResultForSignIn.launch(signInIntent)
-    }
-
-
-    // Helper function for registering startActivityForResult
-    private fun onActivityResult(result: FirebaseAuthUIAuthenticationResult) {
-
-        val response = result.idpResponse
-        val user = auth.currentUser
-
-        if (result.resultCode == Activity.RESULT_OK) {
-
-            Log.d(TAG, "META-DATA2: ${user?.email} ")
-
-            user?.let {
-                if (this.getSignInProvider(user)) { // sign in with password and email
-                    if (!user.isEmailVerified) { // Check if email has been verified
-                        // Send verification email to user's email address
-                        emailVerificationSender?.send(auth.currentUser)
-                        // Sign out the user to force them to verify their account
-                        this.signOut()
-                    }
-
-                }
-            }
-
-            // this.updateUser(user)
-
-        } else { // Failure: response.getError().getErrorCode() and handle error.
-            //throw Exception("Error: ${response?.error?.errorCode}")
-            // Sign in failed
-            user?.let {
-                this.signOut()
-            }
-
-            if (response == null) {
-                // User pressed back button
-                snackBar(requireView(),"Action Cancelled!")
-                return
-            }
-
-            if (response.error?.errorCode == ErrorCodes.NO_NETWORK) {
-                snackBar(requireView(),"No Internet Connection!!")
-                return
-            }
-
-            snackBar(requireView(),"Unknown Error Occurred!")
-            Log.d(TAG, "Unknown Error Occurred: ${response.error}")
-        }
-    }
-
-
-//    private fun isNewUser(user: FirebaseUser): Boolean {
-//        val metadata = user.metadata
-//        Log.d(TAG, "META-DATA: $metadata")
-//        return metadata!!.creationTimestamp == metadata.lastSignInTimestamp
-//
-//    }
-
-
-    /** Check whether log-in provider is twitter/facebook -- non password login method
-     *  Or email -- password login method  */
-    private fun getSignInProvider(user: FirebaseUser): Boolean {
-        val method = user.getIdToken(false).result.signInProvider
-        return method.equals("password")
-
-
-    }
-
-
-    private fun signOut() {
-        authUI.signOut(requireContext())
-            .addOnCompleteListener {
-                Log.d(TAG, "Signed Out.")
-            }.addOnFailureListener {
-                Log.d(TAG, "Unable to sign you out ${it.message}.")
-            }
-    }
-
 
 }

@@ -70,7 +70,11 @@ class SignupFragment : BaseFragment(), View.OnClickListener  {
     /** Initialize buttons */
     private fun initButtons() {
         closeArrowBack.setOnClickListener(this)
+        binding.forgotPasswordButton.setOnClickListener(this)
         binding.registerButton.setOnClickListener(this)
+        binding.facebookButton.setOnClickListener(this)
+        binding.twitterButton.setOnClickListener(this)
+        binding.googleButton.setOnClickListener(this)
     }
 
 
@@ -195,6 +199,10 @@ class SignupFragment : BaseFragment(), View.OnClickListener  {
         when (view?.id) {
             R.id.close -> iItems!!.onBackPressed()
             R.id.register_button -> createAccount()
+            R.id.forgot_password_button -> iItems!!.sendEmailResetPasswordLink(requireActivity())
+            R.id.facebook_button -> snackBar(requireView(), "Coming Soon!")
+            R.id.twitter_button -> snackBar(requireView(), "Coming Soon!")
+            R.id.google_button -> googleSignProvider()
         }
     }
 }
