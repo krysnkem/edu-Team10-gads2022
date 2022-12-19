@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.Read.ReadBookFragment">
+    tools:context=".ui.myspace.folder_content.FolderContentFragment">
 
-    <com.github.barteksc.pdfviewer.PDFView
-        android:id="@+id/pdf_view"
+    <TextView
+        android:id="@+id/folder_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/comfortaa"
+        android:textStyle="bold"
+        tools:text="Foldername"
+        android:layout_marginStart="10dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/folder_content_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textAlignment="center" />
+        android:paddingTop="20dp"
+        app:layoutManager=".layoutmanagers.GridLayoutManagerWrapper"
+        app:spanCount="2"
+        tools:listitem="@layout/book_item_layout" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/progress_overlay"

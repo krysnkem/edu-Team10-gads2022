@@ -1,62 +1,111 @@
 package app.krys.bookspaceapp.ui.upload
 
+import android.app.Application
+import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
+import androidx.work.Operation
+import app.krys.bookspaceapp._util.writeBitmapToFile
+import app.krys.bookspaceapp.data.model.BookInfo
+import app.krys.bookspaceapp.data.model.BookMetaData
 import app.krys.bookspaceapp.data.model.FolderInfo
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
+import app.krys.bookspaceapp.data.pdf.ReadPdfMetadata
+import app.krys.bookspaceapp.repository.FirebaseRepository
+import com.google.android.gms.tasks.Task
+import kotlinx.coroutines.launch
+import java.io.IOException
 
-class UploadBookViewModel() : ViewModel() {
-
-    private val database = Firebase.database.reference
-    private val user = Firebase.auth.currentUser
-
-    private val _folderList = MutableLiveData<List<String>>()
-    val folderNamesList: LiveData<List<String>> = _folderList
-
-    private val _folderInfoList = MutableLiveData<List<FolderInfo>>()
-    val folderInfoList: LiveData<List<FolderInfo>> = _folderInfoList
+class UploadBookViewModel(private val application: Application) : ViewModel() {
 
 
-    private val folderValueEventListener: ValueEventListener = object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            val folderList = mutableListOf<String>()
-            val folderInfoList = mutableListOf<FolderInfo>()
-            for (fileInfoSnapShot in snapshot.children) {
-                val fileInfo = fileInfoSnapShot.getValue<FolderInfo>()
-                folderList.add(fileInfo?.folderName!!)
-                folderInfoList.add(fileInfo)
-            }
-            _folderList.postValue(folderList)
-            _folderInfoList.postValue(folderInfoList)
-        }
+    private val firebaseRepository = FirebaseRepository()
 
-        override fun onCancelled(error: DatabaseError) {
-            Log.e(TAG, "onCancelled: ${error.message}")
-        }
+    val folderNamesList: LiveData<List<String>> = firebaseRepository.folderNamesList
+    val folderInfoList: LiveData<List<FolderInfo>> = firebaseRepository.folderInfoList
 
+    private var bookUri: Uri? = null
+    private var pdf: ReadPdfMetadata? = null
+
+    private lateinit var frontPageBitmapUri: Uri
+
+    private val _metaData = MutableLiveData<BookMetaData>()
+    val metadata: LiveData<BookMetaData> = _metaData
+
+    private val _selectedFolderOption = MutableLiveData<FolderInfo>()
+    val selectedFolderOption: LiveData<FolderInfo> get() = _selectedFolderOption
+
+
+
+
+    fun loadBookFile(bookUri: Uri) {
+        initBookUri(bookUri)
+        initializeMetaData()
+        getPdfMetadata()
     }
 
-    init {
-        if (user != null) {
-            database.child("foldersInfo/${user.uid}").addValueEventListener(
-                folderValueEventListener
-            )
+    private fun initBookUri(bookUri: Uri) {
+        this.bookUri = bookUri
+    }
+
+    private fun initializeMetaData() {
+        bookUri?.let {
+            pdf = ReadPdfMetadata(it, application)
         }
+    }
+
+    private fun getPdfMetadata() {
+        viewModelScope.launch {
+            try {
+                _metaData.postValue(pdf!!.getPdfMetadata())
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+
+
+
+    fun saveBitmapToFile(bitmap: Bitmap) {
+        viewModelScope.launch {
+            try {
+                frontPageBitmapUri = writeBitmapToFile(application, bitmap)
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+            }
+
+        }
+    }
+
+    fun createFileUploadWorkRequests(metaData: BookMetaData, folderId: String): Operation {
+        return firebaseRepository.createFileUploadWorkRequests(
+            metaData,
+            folderId,
+            application,
+            frontPageBitmapUri.toString(),
+            bookUri.toString()
+        )
+    }
+
+    fun resetState(){
+        _metaData.postValue(BookMetaData())
+    }
+
+    fun setSelectedItem(folderInfo: FolderInfo){
+        _selectedFolderOption.postValue(folderInfo)
     }
 
 
     override fun onCleared() {
         super.onCleared()
-        database.child("foldersInfo/${user?.uid}").removeEventListener(folderValueEventListener)
+        firebaseRepository.removeFolderInfoEventListener()
+        Log.d(TAG, "onCleared: called")
+    }
+
+    fun createFolder(folder_name: String): Task<Void>? {
+        return firebaseRepository.createFolder(folder_name)
     }
 
 
@@ -65,11 +114,11 @@ class UploadBookViewModel() : ViewModel() {
     }
 }
 
-class UploadBookViewModelFactory() : ViewModelProvider.Factory {
+class UploadBookViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(UploadBookViewModel::class.java))
-            return UploadBookViewModel() as T
+            return UploadBookViewModel(application) as T
         throw IllegalArgumentException("Unknown ViewModel Class")
     }
 }

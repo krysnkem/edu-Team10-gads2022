@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
     id 'com.google.gms.google-services' // Plugin for google services
     id 'androidx.navigation.safeargs.kotlin'  // Navigation Plugin for safe args
 
@@ -41,6 +42,8 @@ android {
 }
 
 dependencies {
+
+    def work_version = "2.7.1"
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
@@ -86,6 +89,7 @@ dependencies {
     // Add the dependency for the Cloud Storage library
     implementation 'com.google.firebase:firebase-storage-ktx'
 
+
     // FirebaseUI Authentication
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
 
@@ -100,8 +104,9 @@ dependencies {
     //pdf reader libary
     implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
 
-    //overlay loading progress
-    implementation 'com.pnikosis:materialish-progress:1.7'
+
+    // Kotlin + coroutines
+    implementation "androidx.work:work-runtime-ktx:$work_version"
 
 
 }

@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import app.krys.bookspaceapp.MainActivity
 import app.krys.bookspaceapp.R
 import app.krys.bookspaceapp.databinding.FragmentLoginBinding
 import com.firebase.ui.auth.AuthUI
@@ -95,7 +96,6 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
 
 
     private fun setupFirebaseAuthStateCheck() {
-
         authListener = FirebaseAuth.AuthStateListener {
 
             val user = auth.currentUser
@@ -137,6 +137,9 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
 
                 hideProgressBar()
                 hideKeyboard(requireView())
+
+                val intent = Intent(requireContext(), MainActivity::class.java)
+                startActivity(intent)
 
             }.addOnFailureListener {
 

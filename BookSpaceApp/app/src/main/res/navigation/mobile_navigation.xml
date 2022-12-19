@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_nav_home_to_uploadBookFragment"
             app:destination="@id/uploadBookFragment" />
+        <action
+            android:id="@+id/action_nav_home_to_folderContentFragment"
+            app:destination="@id/folderContentFragment" />
     </fragment>
 
     <fragment
@@ -27,13 +30,29 @@
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
     <fragment
-        android:id="@+id/mySpaceFragment"
-        android:name="app.krys.bookspaceapp.ui.myspace.MySpaceFragment"
-        android:label="My Space"
-        tools:layout="@layout/fragment_my_space" />
-    <fragment
         android:id="@+id/uploadBookFragment"
         android:name="app.krys.bookspaceapp.ui.upload.UploadBookFragment"
         android:label="Upload a book"
         tools:layout="@layout/fragment_upload_book" />
+    <fragment
+        android:id="@+id/folderContentFragment"
+        android:name="app.krys.bookspaceapp.ui.myspace.folder_content.FolderContentFragment"
+        android:label="View Folder Content"
+        tools:layout="@layout/fragment_folder_content" >
+        <argument
+            android:name="folderInfo"
+            app:argType="app.krys.bookspaceapp.data.model.FolderInfo" />
+        <action
+            android:id="@+id/action_folderContentFragment_to_readBookFragment"
+            app:destination="@id/readBookFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/readBookFragment"
+        android:name="app.krys.bookspaceapp.ui.Read.ReadBookFragment"
+        android:label="fragment_read_book"
+        tools:layout="@layout/fragment_read_book" >
+        <argument
+            android:name="booInfo"
+            app:argType="app.krys.bookspaceapp.data.model.BookInfo" />
+    </fragment>
 </navigation>

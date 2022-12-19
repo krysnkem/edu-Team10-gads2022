@@ -10,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import app.krys.bookspaceapp._util.createDialog
 import app.krys.bookspaceapp._util.showToast
 import app.krys.bookspaceapp.data.model.FolderInfo
@@ -18,19 +20,13 @@ import app.krys.bookspaceapp.databinding.ConfirmOptionDialogLayoutBinding
 import app.krys.bookspaceapp.databinding.FolderOptionsDialogLayoutBinding
 import app.krys.bookspaceapp.databinding.FragmentCreateFolderBinding
 import app.krys.bookspaceapp.databinding.FragmentMySpaceBinding
+import app.krys.bookspaceapp.ui.adapter.myspace.FolderClickListener
 import app.krys.bookspaceapp.ui.adapter.myspace.FolderOptionsClickListener
 import app.krys.bookspaceapp.ui.adapter.myspace.MySpaceRecyclerViewAdpater
 import app.krys.bookspaceapp.ui.home.HomeFragmentDirections
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 
 /**
  * [MySpaceFragment] shows the users library space
@@ -52,7 +48,7 @@ class MySpaceFragment : Fragment() {
     private lateinit var confirmOptionDialogLayout: ConfirmOptionDialogLayoutBinding
 
     private val viewModel: MySpaceViewModel by activityViewModels {
-        MySpaceViewModelFactory()
+        MySpaceViewModelFactory(requireActivity().application)
     }
     private lateinit var database: DatabaseReference
     private var user: FirebaseUser? = null
@@ -91,14 +87,22 @@ class MySpaceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
+        if (savedInstanceState == null)
+            showLoadingOverlay()
 
         folderAdapter = MySpaceRecyclerViewAdpater(viewModel.options,
             FolderOptionsClickListener { folderInfo ->
-
                 setUpDialogMethods(folderInfo)
-            })
+            },
+            FolderClickListener {folderInfo ->
+                val action = HomeFragmentDirections.actionNavHomeToFolderContentFragment(folderInfo)
+                findNavController().navigate(action)
+            }
+        )
+        folderAdapter.dataChanged.observe(viewLifecycleOwner, Observer<Boolean>{
+            hideLoadingOverlay()
+        })
+
 
 
         binding.folderRv.adapter = folderAdapter
@@ -117,7 +121,6 @@ class MySpaceFragment : Fragment() {
             showLoadingOverlay()
             createFolder()
         }
-
 
         //check that characters entered for folder name is not more that 20 characters long
         createFolderDialogLayout.folderNameEt.addTextChangedListener(object : TextWatcher {
@@ -181,7 +184,6 @@ class MySpaceFragment : Fragment() {
             folderOptionsDialog.dismiss()
             confirmOptionDialog.show()
 
-
             //set the text of the confirm option dialog to show the folder name
             confirmOptionDialogLayout.confirmationTextTv.text =
                 String.format("You are about to delete ${folderInfo.folderName}")
@@ -195,9 +197,10 @@ class MySpaceFragment : Fragment() {
                 confirmOptionDialog.dismiss()
                 showLoadingOverlay()
 
-                val task = viewModel.removeFoler(folderInfo)
+                val task = viewModel.removeFolder(folderInfo)
                 if (task == null) {
-                    showToast("User is not signed in", requireContext())
+//                    showToast("User is not signed in", requireContext())
+                    hideLoadingOverlay()
                 } else {
                     task
                         .addOnSuccessListener {

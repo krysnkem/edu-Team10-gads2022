@@ -12,8 +12,12 @@
             type="app.krys.bookspaceapp.data.model.FolderInfo" />
 
         <variable
-            name="listener"
+            name="optionListener"
             type="app.krys.bookspaceapp.ui.adapter.myspace.FolderOptionsClickListener" />
+
+        <variable
+            name="folderClickListener"
+            type="app.krys.bookspaceapp.ui.adapter.myspace.FolderClickListener" />
 
     </data>
 
@@ -22,6 +26,7 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.card.MaterialCardView
+
             android:layout_width="150dp"
             android:layout_height="160dp"
             android:layout_marginTop="15dp"
@@ -41,9 +46,13 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="?selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
+                android:onClick="@{()-> folderClickListener.onClick(folder)}"
                 android:padding="15dp">
+
+
 
                 <ImageView
                     android:id="@+id/folder_imageV"
@@ -105,20 +114,26 @@
 
                 <ImageButton
                     android:id="@+id/optionsBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="5dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:onClick="@{()->listener.onClick(folder)}"
+                    android:onClick="@{()->optionListener.onClick(folder)}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/folder_imageV"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_more" />
 
 
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+
         </com.google.android.material.card.MaterialCardView>
+
+
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

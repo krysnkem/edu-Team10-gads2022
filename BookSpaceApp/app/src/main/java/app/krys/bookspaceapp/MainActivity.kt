@@ -1,6 +1,10 @@
 package app.krys.bookspaceapp
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -13,8 +17,15 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
+import app.krys.bookspaceapp._util.DOWNLOAD_NOTIFICATION_CHANNEL_ID
+import app.krys.bookspaceapp._util.DOWNLOAD_NOTIFICATION_CHANNEL_NAME
+import app.krys.bookspaceapp._util.NOTIFICATION_CHANNEL_ID
+import app.krys.bookspaceapp._util.NOTIFICATION_CHANNEL_NAME
 import app.krys.bookspaceapp.databinding.ActivityMainBinding
 import app.krys.bookspaceapp.ui.signup_login.SignUpLoginActivity
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -45,7 +56,8 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        Firebase.database.setPersistenceEnabled(true)
+        createChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME)
+        createDownloadChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID, DOWNLOAD_NOTIFICATION_CHANNEL_NAME)
 
     }
 
@@ -69,8 +81,66 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (Firebase.auth.currentUser == null) {
+            val intent = Intent(this@MainActivity, SignUpLoginActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+    private fun createChannel(channelId: String, channelName: String) {
+        // TODO: Step 1.6 START create a channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel =
+                NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+                    .apply {
+                        enableLights(true)
+                        lightColor = Color.RED
+                        description = "Time for Breakfast"
+                        setShowBadge(false)
+
+                    }
+
+            val notificationManager = getSystemService(
+                NotificationManager::class.java
+            )
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
+        // TODO: Step 1.6 END create a channel
+
+
+    }
+
+    private fun createDownloadChannel(channelId: String, channelName: String) {
+        // TODO: Step 1.6 START create a channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val downloadNotificationChannel =
+                NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+                    .apply {
+                        enableLights(true)
+                        lightColor = ContextCompat.getColor(
+                            this@MainActivity.applicationContext,
+                            R.color.blue_accent
+                        )
+                        description = "Time for Breakfast"
+                        setShowBadge(false)
+
+                    }
+
+            val notificationManager = getSystemService(
+                NotificationManager::class.java
+            )
+            notificationManager.createNotificationChannel(downloadNotificationChannel)
+        }
+        // TODO: Step 1.6 END create a channel
+
+
+    }
+
 }
