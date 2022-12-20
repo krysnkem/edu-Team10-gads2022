@@ -17,6 +17,7 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -247,7 +248,7 @@ class AccountSettingsFragment : BaseFragment() {
         Log.d(TAG, "saveButtonState: Button state -> $flag")
         stateFlag = flag
         if (flag) {
-            changePhotoButton.setTextColor(requireActivity().resources.getColor(R.color.blue_accent))
+            changePhotoButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue_accent))
             changePhotoButton.isEnabled = true
         } else {
             changePhotoButton.setTextColor(Color.LTGRAY)
@@ -266,7 +267,7 @@ class AccountSettingsFragment : BaseFragment() {
             if (!getSignInProvider(it)) {
                 // All buttons: Disabled and change text and background colors
                 saveButton.setBackgroundColor(Color.LTGRAY)
-                saveButton.setTextColor(requireActivity().resources.getColor(R.color.reader_text_color))
+                saveButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.reader_text_color))
                 profileImage.isEnabled = false
                 saveButton.isEnabled = false
                 // All buttons: Removed from the view
@@ -276,7 +277,7 @@ class AccountSettingsFragment : BaseFragment() {
                 // All Editable fields
                 email.isEnabled = false
                 userName.isEnabled = false
-                currentPassword.setHintTextColor(Color.LTGRAY)
+                // currentPassword.setHintTextColor(Color.LTGRAY)
                 currentPassword.isEnabled = false
             }
         }
@@ -287,6 +288,7 @@ class AccountSettingsFragment : BaseFragment() {
 
     /** Update user data in the DB calling other helper methods */
     private fun changeUserData() {
+        var isItemsChanged = false
         showProgressBar()
         saveButton.isEnabled = false
         val emailAddress = email.text.toString()
@@ -295,23 +297,36 @@ class AccountSettingsFragment : BaseFragment() {
         if (!user?.email.equals(emailAddress)) {
             /* Validate input fields
             * Check for empty string */
-            if (!TextUtils.isEmpty(email.text.toString()) &&
-                !TextUtils.isEmpty(currentPassword.text.toString())) {
-
-                editUserEmail()
+            if (!TextUtils.isEmpty(email.text.toString())) {
+                if (!TextUtils.isEmpty(currentPassword.text.toString())) {
+                    isItemsChanged = true
+                    editUserEmail()
+                } else {
+                    currentPassword.error = "Required."
+                }
             }
 
         }
 
         val newUsername = userName.text.toString()
         if ( !TextUtils.isEmpty(newUsername)) { // Change username
-            if (oldUsername != newUsername)
+            if (oldUsername != newUsername) {
+                isItemsChanged = true
                 changeUsername()
+            }
+
         }
 
-        iUser!!.updateUserInfo() // Update nav header
+        if (isItemsChanged) {
+
+            iUser!!.updateUserInfo() // Update nav header
+        } else {
+            hideProgressBar()
+            snackBar(requireView(), "No field was Changed!")
+        }
 
         saveButton.isEnabled = true
+
     }
 
 

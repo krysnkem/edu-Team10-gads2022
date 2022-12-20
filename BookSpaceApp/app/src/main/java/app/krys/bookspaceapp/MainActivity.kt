@@ -37,6 +37,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.nostra13.universalimageloader.core.ImageLoader
 import de.hdodenhof.circleimageview.CircleImageView
 
 
@@ -105,13 +106,13 @@ class MainActivity : AppCompatActivity(), IUser {
             val name = navHeader.findViewById<TextView>(R.id.user_name)
             val email = navHeader.findViewById<TextView>(R.id.email)
             val profileImage = navHeader.findViewById<CircleImageView>(R.id.profile_image)
-//            val imageLoader = ImageLoader.getInstance()
+            val imageLoader = ImageLoader.getInstance()
 
             // Get user data for nav header
             userDataViewModel.userData.observe(this) { user ->
                 name.text = user?.name
                 email.text = user?.email
-//                imageLoader.displayImage(user?.profile_image, profileImage)
+                imageLoader.displayImage(user?.profile_image, profileImage)
             }
 
             // On click, display AccountSettingsFragment
@@ -161,13 +162,17 @@ class MainActivity : AppCompatActivity(), IUser {
         }
     }
 
+    /** NOT NEEDED ANYMORE */
+    /** Real-time auth state check handled here --> observeAuthenticationState(menu) */
+    /*
     override fun onStart() {
         super.onStart()
         if (Firebase.auth.currentUser == null) {
             val intent = Intent(this@MainActivity, SignUpLoginActivity::class.java)
             startActivity(intent)
+            finish()
         }
-    }
+    }*/
 
 
     /** Hide Logout Menu item if the user is authenticated and
@@ -243,11 +248,11 @@ class MainActivity : AppCompatActivity(), IUser {
             val db = FirebaseDatabase.getInstance().reference
             val user = auth.currentUser
             getSignInProvider(user!!)
-            Log.d(TAG, "Method 111111111111: Get User Data: ${user.providerData}")
+            Log.d(TAG, "Method 1: Get User Data: ${user.providerData}")
             viewModel.signInProvider.observe(this) { signInProvider ->
                 if (signInProvider) {
                     var userData: User? = null
-                    /** Query Method 1 */
+                    /** Query Method 2 */
                     /**val query2: Query = db.child(getString(R.string.db_node_users))
                     .orderByChild(getString(R.string.field_user_id))
                     .equalTo(user!!.uid)*/
@@ -262,7 +267,7 @@ class MainActivity : AppCompatActivity(), IUser {
 
                             for (singleSnapshot: DataSnapshot in snapshot.children) {
                                 userData = singleSnapshot.getValue<User>()
-                                Log.d(TAG, "Method 1: Get User Data: ${userData.toString()}")
+                                Log.d(TAG, "Method 2: Get User Data: ${userData.toString()}")
                             }
                             // Get user data and send the data to observe
                             userDataViewModel.getUserData(userData)
@@ -364,6 +369,12 @@ class MainActivity : AppCompatActivity(), IUser {
 
                         menuItemLogin.isVisible = true
                         menuItemLogout.isVisible = false
+
+                        /** If user is not authenticated, redirect to Login Screen
+                         *  and remove @MainActivity from backstack */
+                        val intent = Intent(this@MainActivity, SignUpLoginActivity::class.java)
+                        startActivity(intent)
+                        finish()
                     }
                 }
             }
