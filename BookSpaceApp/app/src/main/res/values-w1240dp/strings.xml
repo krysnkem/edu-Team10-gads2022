@@ -9,4 +9,9 @@
     <string name="placeholder_author_text">John Abiodun</string>
     <string name="placeholder_book_name_text">Trisa’s Trove</string>
     <string name="book_image">book image</string>
+    <string name="new_folder">New Folder</string>
+    <string name="about">About</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="remove">Remove</string>
 </resources>

@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
     id 'com.google.gms.google-services' // Plugin for google services
     id 'androidx.navigation.safeargs.kotlin'  // Navigation Plugin for safe args
 
@@ -42,6 +43,9 @@ android {
 
 dependencies {
 
+    implementation 'com.android.volley:volley:1.2.1'
+    def work_version = "2.7.1"
+
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
@@ -70,7 +74,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     // Universal Image Loader
-    //implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 
 
     // User preference settings
@@ -86,13 +90,24 @@ dependencies {
     // Add the dependency for the Cloud Storage library
     implementation 'com.google.firebase:firebase-storage-ktx'
 
+
     // FirebaseUI Authentication
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
 
+    // FirebaseUI for Firebase Realtime Database
+    implementation 'com.firebaseui:firebase-ui-database:8.0.2'
+
     // FirebaseUI Authentication: Facebook Login
     // implementation 'com.facebook.android:facebook-login:15.1.0'
-    implementation 'com.facebook.android:facebook-login:8.1.0'
+    // implementation 'com.facebook.android:facebook-login:8.1.0'
     // implementation 'com.facebook.android:facebook-android-sdk:15.0.1'
+
+    //pdf reader libary
+    implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
+
+
+    // Kotlin + coroutines
+    implementation "androidx.work:work-runtime-ktx:$work_version"
 
 
 }

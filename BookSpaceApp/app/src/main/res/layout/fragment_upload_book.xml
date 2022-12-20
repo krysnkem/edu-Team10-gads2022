@@ -15,7 +15,7 @@
         android:paddingTop="10dp"
         android:text="@string/folder"
         app:layout_constraintStart_toStartOf="@+id/guidelie_left"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
 
     <Spinner
         android:id="@+id/spinner"
@@ -70,9 +70,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="84dp"
         app:layout_constraintStart_toStartOf="@+id/guidelie_left"
-        app:layout_constraintTop_toBottomOf="@+id/spinner"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="TextView" />
 
     <Button
@@ -99,26 +99,69 @@
         app:layout_constraintStart_toStartOf="@id/book_name_tv"
         app:layout_constraintTop_toBottomOf="@id/book_name_tv" />
 
-    <!--TODO: Replace with view to display book cover-->
+    <include
+        android:id="@+id/view_book_layout"
+        layout="@layout/view_book_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/book_cover"
+        app:layout_constraintEnd_toEndOf="@+id/book_cover"
+        app:layout_constraintStart_toStartOf="@+id/book_cover"
+        app:layout_constraintTop_toTopOf="@+id/book_cover" />
+
     <View
         android:id="@+id/book_cover"
-        android:layout_width="120dp"
-        android:layout_height="186dp"
+        android:layout_width="140dp"
+        android:layout_height="206dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/upload_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+        app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <Button
         android:id="@+id/upload_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/upload"
+        android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/book_cover" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/progress_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.4"
+        android:animateLayoutChanges="true"
+        android:background="@android:color/black"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            android:id="@+id/progress_wheel"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/blue_accent"
+            android:clickable="true"
+            android:focusable="true"
+            android:indeterminate="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

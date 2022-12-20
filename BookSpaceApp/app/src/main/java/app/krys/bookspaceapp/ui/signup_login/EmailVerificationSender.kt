@@ -1,9 +1,9 @@
 package app.krys.bookspaceapp.ui.signup_login
 
-import android.app.Activity
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.google.firebase.auth.FirebaseUser
+
 
 class EmailVerificationSender(private var context: FragmentActivity) {
 

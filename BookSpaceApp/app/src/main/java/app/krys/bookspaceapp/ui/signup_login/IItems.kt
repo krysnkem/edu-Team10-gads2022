@@ -1,5 +1,7 @@
 package app.krys.bookspaceapp.ui.signup_login
 
+import androidx.fragment.app.FragmentActivity
+
 interface IItems {
 
     fun showLoginFragment()
@@ -7,6 +9,7 @@ interface IItems {
     fun hideLoginFragment()
 
     fun redirectFromLoginScreenToHome()
+    fun exitAppFromLoginScreen()
 
     fun onBackPressed()
 
@@ -15,4 +18,6 @@ interface IItems {
     fun inflateSignupFragment()
 
     fun showResendEmailVerificationDialog()
+
+    fun sendEmailResetPasswordLink(fa: FragmentActivity)
 }

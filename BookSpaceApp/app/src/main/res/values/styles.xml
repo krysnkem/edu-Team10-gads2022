@@ -6,4 +6,33 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
+
+
+    <style name="TextAppearance.App.Button" parent="TextAppearance.MaterialComponents.Button">
+        <item name="fontFamily">@font/comfortaa</item>
+        <item name="android:fontFamily">@font/comfortaa</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Widget.BookSpace.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/blue_accent</item>
+    </style>
+
+    <style name="Widget.BookSpace.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/blue_accent</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Widget.BookSpace.SocialButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/light_gray_900</item>
+    </style>
+
+    <style name="Widget.OneNote.Button.NoBKColor" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/light_gray_900</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
 </resources>
