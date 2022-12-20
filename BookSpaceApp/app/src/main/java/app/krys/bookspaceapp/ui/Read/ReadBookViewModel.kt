@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.*
 import app.krys.bookspaceapp._util.loadBytesArrayFromFile
 import app.krys.bookspaceapp._util.pdfFileExists
-import app.krys.bookspaceapp._util.writeBitmapToFile
 import app.krys.bookspaceapp._util.writeByteArrayToFile
 import app.krys.bookspaceapp.data.model.BookInfo
 import app.krys.bookspaceapp.repository.FirebaseRepository
@@ -22,7 +21,7 @@ class ReadBookViewModel(val application: Application) : ViewModel() {
             try {
                 val byteArray = firebaseRepository.downloadBookFile(bookInfo.downloadUrl!!)
                 _pdfBytes.postValue(byteArray!!)
-                writeByteArrayToFile(application.applicationContext, byteArray, filename, bookInfo.folderId!!)
+                writeByteArrayToFile(application.applicationContext, byteArray,  filename, bookInfo.folderId!!)
             }catch (e: Exception){
                 e.printStackTrace()
             }
@@ -33,16 +32,21 @@ class ReadBookViewModel(val application: Application) : ViewModel() {
     fun loadBook(bookInfo: BookInfo) {
         val filename = "${bookInfo.bookId}.pdf"
         viewModelScope.launch {
-            if (pdfFileExists(application.applicationContext, filename, bookInfo.folderId!!)) {
-                _pdfBytes.postValue(
-                    loadBytesArrayFromFile(
-                        application.applicationContext,
-                        filename,
-                        bookInfo.folderId!!
-                    )!!
-                )
-            }else {
-                loadBytes(bookInfo)
+            try {
+                if (pdfFileExists(application.applicationContext, filename, bookInfo.folderId!!)) {
+                    _pdfBytes.postValue(
+                        loadBytesArrayFromFile(
+                            application.applicationContext,
+                            filename,
+                            bookInfo.folderId!!
+                        )!!
+                    )
+                }else {
+                    loadBytes(bookInfo)
+                }
+
+            }catch (e: Exception){
+                e.printStackTrace()
             }
 
         }

@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TableLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import app.krys.bookspaceapp.databinding.FragmentHomeBinding
+import app.krys.bookspaceapp.ui.account.settings.UserDataViewModel
 import app.krys.bookspaceapp.ui.adapter.home.HomePagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -55,7 +56,6 @@ class HomeFragment : Fragment() {
             }
 
         }.attach()
-
     }
 
     override fun onDestroyView() {

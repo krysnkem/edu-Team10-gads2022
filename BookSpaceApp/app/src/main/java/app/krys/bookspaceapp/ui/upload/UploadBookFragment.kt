@@ -77,7 +77,7 @@ class UploadBookFragment : Fragment() {
 
         setupArrayAdapter()
         setUpSpinner()
-
+        
         binding.selectBtn.setOnClickListener {
             val storagePerssmion = ContextCompat.checkSelfPermission(
                 requireContext(),

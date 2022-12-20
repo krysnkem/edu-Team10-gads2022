@@ -39,18 +39,16 @@
     <string name="register_activity_field_isEmpty">Field cannot be empty</string>
     <string name="register_activity_password_matching">Password does not match</string>
 
-    <style name="SHA1">66:C5:D4:23:0E:11:E7:E9:8F:A8:31:FF:4F:48:5C:6D:65:5F:51:FD</style>
-
-    <style name="MD5">11:58:FE:E3:9C:B1:BF:47:09:11:D8:E1:10:D3:7A:3B</style>
 
     <!-- Firebase Database Nodes -->
-    <string name="db_node_users">users</string>
+
     <string name="cancel_button">Cancel</string>
     <string name="cancel_action_button">cancel action button</string>
     <string name="resend_email_button">Resend</string>
     <string name="action_resend_email_button">Resend Email Button</string>
     <string name="sign_out">Sign Out</string>
-    <string name="action_login">Login</string>
+    <string name="action_logout">LogOut</string>
+    <string name="action_login">LogIn</string>
     <string name="log_in">Log in</string>
     <string name="label_enter_password">Enter password</string>
     <string name="authentication_failure">Authentication failed!</string>
@@ -59,5 +57,41 @@
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="remove">Remove</string>
+    <string name="menu_logout">LogOut</string>
+    <string name="menu_account_settings">Account Settings</string>
+
+    <style name="SHA1">66:C5:D4:23:0E:11:E7:E9:8F:A8:31:FF:4F:48:5C:6D:65:5F:51:FD</style>
+
+    <style name="MD5">11:58:FE:E3:9C:B1:BF:47:09:11:D8:E1:10:D3:7A:3B</style>
+
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <!-- Firebase Database Nodes -->
+    <string name="db_node_users">users</string>
+    <string name="field_profile_image">profile_image</string>
+    <string name="field_name">name</string>
+
+
+    <!-- Dialog Builder -->
+    <string name="confirm_action">Are You Sure You Want To Logout</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="set_action_title">LOGOUT</string>
+    <string name="choose_photo_from_memory">Choose photo from memory</string>
+    <string name="take_photo">Take a Photo</string>
+
+
+    <!--  Account settings   -->
+    <string name="account_settings">Account Settings</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="upload_photo">Upload Photo</string>
+    <string name="user_name">Firstname and Lastname</string>
+    <string name="current_password">Current Password</string>
+    <string name="save_button">Save</string>
+    <string name="change_password">Change Password</string>
+    <string name="nav_header_edit_button">Edit Button</string>
+    <string name="send_button">Send</string>
+    <string name="action_send_email_button">Send Reset Email Button</string>
 
 </resources>

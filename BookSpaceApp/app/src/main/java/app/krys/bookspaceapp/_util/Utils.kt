@@ -15,7 +15,7 @@ import java.io.IOException
 import java.util.*
 
 fun createDialog(view: View, context: Context): AlertDialog {
-    return  AlertDialog.Builder(context).setView(view)
+    return AlertDialog.Builder(context).setView(view)
         .create()
 }
 
@@ -68,17 +68,26 @@ suspend fun writeBitmapToFile(applicationContext: Context, bitmap: Bitmap): Uri 
  * @throws FileNotFoundException Throws if byteArray file cannot be found
  */
 @Throws(FileNotFoundException::class)
-suspend fun writeByteArrayToFile(applicationContext: Context, byteArray: ByteArray, name: String, folderId: String): ByteArray {
-    return withContext(Dispatchers.IO){
-        val outputDir = File(applicationContext.filesDir, folderId)
+suspend fun writeByteArrayToFile(
+    applicationContext: Context,
+    byteArray: ByteArray,
+    name: String,
+    folderId: String
+): ByteArray {
+    return withContext(Dispatchers.IO) {
+        val outputDir = File(applicationContext.filesDir, OUTPUT_PATH)
         if (!outputDir.exists()) {
             outputDir.mkdirs() // should succeed
         }
-        val outputFile = File(outputDir, name)
+        val folderDir = File(outputDir, folderId)
+        if (!folderDir.exists()){
+            folderDir.mkdirs()
+        }
+        val outputFile = File(folderDir, name)
         try {
             outputFile.writeBytes(byteArray)
             outputFile.readBytes()
-        }catch (e: IOException){
+        } catch (e: IOException) {
             e.printStackTrace()
             throw  e
         }
@@ -90,32 +99,56 @@ suspend fun writeByteArrayToFile(applicationContext: Context, byteArray: ByteArr
  * Writes pdf byte array to a temporary file and returns the Uri for the file
  * @param applicationContext Application context
  * @param name String name to temp file
+ * @param folderId String id of the folder
  * @return ByteArray for temp file
  * @throws FileNotFoundException Throws if byteArray file cannot be found
  */
 @Throws(FileNotFoundException::class)
-suspend fun loadBytesArrayFromFile(applicationContext: Context, name: String, folderId: String): ByteArray {
-    return withContext(Dispatchers.IO){
-        val outputDir = File(applicationContext.filesDir, folderId)
+suspend fun loadBytesArrayFromFile(
+    applicationContext: Context, name: String,
+    folderId: String
+): ByteArray {
+    return withContext(Dispatchers.IO) {
+
+        val outputDir = File(applicationContext.filesDir, OUTPUT_PATH)
         if (!outputDir.exists()) {
-            outputDir.mkdirs() // should succeed
+            throw FileNotFoundException("User Folder has been cleared")// should succeed
         }
-        val outputFile = File(outputDir, name)
+        val fileDir = File(outputDir, folderId)
+        if (!fileDir.exists()) {
+            throw FileNotFoundException("Folder does Not Exist")
+        }
+        val outputFile = File(fileDir, name)
+        if (!outputFile.exists()) {
+           throw FileNotFoundException("File no longer exists")
+        }
         outputFile.readBytes()
     }
 
 }
 
-fun deleteCachedFiles(applicationContext: Context, folderId: String): Boolean {
-    val outputDir = File(applicationContext.filesDir, folderId)
+fun deleteFolderCachedFiles(applicationContext: Context, folderId: String): Boolean {
+    val outputDir = File(applicationContext.filesDir, OUTPUT_PATH)
     if (!outputDir.exists()) {
         return false// should succeed
     }
-    return outputDir.delete()
+    val fileDir = File(outputDir, folderId)
+    if (!fileDir.exists()) {
+        return false
+    }
+    return fileDir.deleteRecursively()
 }
 
+//deletes all files
+fun clearAllCachedFiles(applicationContext: Context) {
+    val outputPath = File(applicationContext.filesDir, OUTPUT_PATH)
+    if (!outputPath.exists()){
+        return
+    }
+    outputPath.deleteRecursively()
 
 
+}
 
 
 /**
@@ -123,7 +156,6 @@ fun deleteCachedFiles(applicationContext: Context, folderId: String): Boolean {
  * @param applicationContext Application context
  * @param name String containing the filename
  * @return True if file exists and false if file or directory does not exist
- * @throws FileNotFoundException Throws if bitmap file cannot be found
  */
 @Throws(FileNotFoundException::class)
 suspend fun pdfFileExists(applicationContext: Context, name: String, folderId: String): Boolean {

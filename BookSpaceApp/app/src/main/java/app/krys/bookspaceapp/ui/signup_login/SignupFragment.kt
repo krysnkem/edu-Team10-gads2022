@@ -1,15 +1,13 @@
 package app.krys.bookspaceapp.ui.signup_login
 
+
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ImageButton
-import app.krys.bookspaceapp.MainActivity
 import app.krys.bookspaceapp.R
 import app.krys.bookspaceapp.databinding.FragmentSignupBinding
-import com.facebook.internal.instrument.errorreport.ErrorReportHandler.save
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -22,17 +20,17 @@ class SignupFragment : BaseFragment(), View.OnClickListener  {
 
     private var iItems: IItems? = null
     private lateinit var auth: FirebaseAuth
-    // Form validator
+    /** Form validator */
     private var formValidator: FormValidator? = null
-    // Send email to new user for verification
+    /** Send email to new user for verification */
     private var emailVerificationSender: EmailVerificationSender? = null
 
     private var _binding: FragmentSignupBinding? = null
 
-     private lateinit var closeArrowBack: ImageButton
+    private lateinit var closeArrowBack: ImageButton
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    /** This property is only valid between onCreateView and
+     * onDestroyView */
     private val binding get() = _binding!!
 
 
@@ -59,25 +57,30 @@ class SignupFragment : BaseFragment(), View.OnClickListener  {
 
         // Initialize form validator
         if (formValidator == null )
-            with(binding) {
-                formValidator = FormValidator(email,  createPassword, confirmPassword)
-            }
+            formValidator = FormValidator(binding.email, binding.createPassword, binding.confirmPassword)
+
 
         if (emailVerificationSender == null)
             emailVerificationSender = EmailVerificationSender(requireActivity())
 
 
-        initToolbar()
+        initButtons()
     }
 
-    private fun initToolbar() {
+    /** Initialize buttons */
+    private fun initButtons() {
         closeArrowBack.setOnClickListener(this)
+        binding.forgotPasswordButton.setOnClickListener(this)
         binding.registerButton.setOnClickListener(this)
+        binding.facebookButton.setOnClickListener(this)
+        binding.twitterButton.setOnClickListener(this)
+        binding.googleButton.setOnClickListener(this)
     }
 
 
+    /** Validated user provided data and if valid, call setupCreateAccount() method  */
     private fun createAccount() {
-        this.hideKeyboard(binding.registerActivity)
+        this.hideKeyboard(requireView())
 
         /* Validate input fields
         * Check for empty string */
@@ -106,6 +109,7 @@ class SignupFragment : BaseFragment(), View.OnClickListener  {
 
 
 
+    /** Send user data to database -- Real-time Database -- for Storage */
     private fun setupCreateAccount(email: String, password: String) {
         this.showProgressBar()
 
@@ -113,7 +117,7 @@ class SignupFragment : BaseFragment(), View.OnClickListener  {
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
                     Log.d(TAG, "OnComplete AuthState: ${auth.currentUser?.email}")
-                     this.sendUserDataToDB(auth.currentUser)
+                    this.sendUserDataToDB(auth.currentUser)
                 }
                 if (!task.isSuccessful){
                     this.toastMessage("Unable to Register Account")
@@ -124,11 +128,12 @@ class SignupFragment : BaseFragment(), View.OnClickListener  {
     }
 
 
+    /** Helper function for setupCreateAccount() method */
     private fun sendUserDataToDB(currentUser: FirebaseUser?) {
 
         val user = currentUser?.let {
-            val name = "Anthony Alika"
-            val email =  it.email?.substring(0, it.email!!.indexOf("@")) ?: ""
+            val name = it.email?.substring(0, it.email!!.indexOf("@")) ?: ""
+            val email =  it.email
             val profileImage = ""
             val userId = it.uid
 
@@ -163,6 +168,8 @@ class SignupFragment : BaseFragment(), View.OnClickListener  {
 
     }
 
+
+    /** Redirect user to Login Screen to log in after registration  */
     private fun redirectToLoginScreen() {
         iItems!!.onBackPressed()
     }
@@ -190,8 +197,12 @@ class SignupFragment : BaseFragment(), View.OnClickListener  {
 
     override fun onClick(view: View?) {
         when (view?.id) {
-             R.id.close -> iItems!!.onBackPressed()
+            R.id.close -> iItems!!.onBackPressed()
             R.id.register_button -> createAccount()
+            R.id.forgot_password_button -> iItems!!.sendEmailResetPasswordLink(requireActivity())
+            R.id.facebook_button -> snackBar(requireView(), "Coming Soon!")
+            R.id.twitter_button -> snackBar(requireView(), "Coming Soon!")
+            R.id.google_button -> googleSignProvider()
         }
     }
 }

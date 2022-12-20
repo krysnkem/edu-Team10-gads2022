@@ -44,7 +44,7 @@
                 android:id="@+id/app_logo"
                 android:layout_width="@dimen/logo_size_horizontal"
                 android:layout_height="@dimen/logo_size_vertical"
-                android:backgroundTint="@color/com_facebook_blue"
+                android:backgroundTint="@color/blue_accent"
                 android:contentDescription="@string/app_logo_img"
                 android:src="@drawable/book_space_logo" />
 
@@ -147,42 +147,42 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-    <!--
-        <LinearLayout
-            android:id="@+id/buttons_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_16"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="@dimen/margin_16"
-            android:orientation="horizontal"
-            android:textColor="@color/blue_accent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_button">
-
-            <Button
-                android:id="@+id/forgot_password_button"
-                style="@style/Widget.BookSpace.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/forgot_password_button"
-                android:textColor="@color/blue_accent" />
-
-            <androidx.legacy.widget.Space
-                android:layout_width="0dp"
+        <!--
+            <LinearLayout
+                android:id="@+id/buttons_container"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_marginStart="@dimen/margin_16"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="@dimen/margin_16"
+                android:orientation="horizontal"
+                android:textColor="@color/blue_accent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/register_button">
 
-            <Button
-                android:id="@+id/login_button"
-                style="@style/Widget.BookSpace.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/login_button"
-                android:textColor="@color/blue_accent" />
+                <Button
+                    android:id="@+id/forgot_password_button"
+                    style="@style/Widget.BookSpace.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/forgot_password_button"
+                    android:textColor="@color/blue_accent" />
 
-        </LinearLayout> -->
+                <androidx.legacy.widget.Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/login_button"
+                    style="@style/Widget.BookSpace.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_button"
+                    android:textColor="@color/blue_accent" />
+
+            </LinearLayout> -->
 
         <Button
             android:id="@+id/forgot_password_button"

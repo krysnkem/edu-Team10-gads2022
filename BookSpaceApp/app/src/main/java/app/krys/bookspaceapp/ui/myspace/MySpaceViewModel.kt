@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import app.krys.bookspaceapp._util.deleteCachedFiles
+import app.krys.bookspaceapp._util.deleteFolderCachedFiles
 import app.krys.bookspaceapp.data.model.FolderInfo
 import app.krys.bookspaceapp.repository.FirebaseRepository
 import com.google.android.gms.tasks.Task
@@ -25,7 +25,7 @@ class MySpaceViewModel(val application: Application) : ViewModel() {
         var task: Task<Void>? = null
         viewModelScope.launch {
             try {
-                deleteCachedFiles(application.applicationContext, folderId = folderInfo.folderId!!)
+                deleteFolderCachedFiles(application.applicationContext, folderId = folderInfo.folderId!!)
                 task =  firebaseRepository.removeFolder(folderInfo)
             }catch (e: Exception){
                 e.printStackTrace()
