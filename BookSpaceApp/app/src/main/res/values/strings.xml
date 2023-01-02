@@ -7,10 +7,19 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
+    <!-- App menu items   -->
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
-    <string name="create">Create</string>
+    <string name="menu_logout">LogOut</string>
+    <string name="menu_account_settings">Account Settings</string>
+
+    <!-- Email verification dialog   -->
+    <string name="action_send_email_button">Send Reset Email Button</string>
+    <string name="confirm_log_out">Confirm Log Out</string>
+    <string name="logout_action_button">Logout action button</string>
+    <string name="resend_email">Resend Email</string>
+    <string name="verify_account">Verify Account</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_folder">add folder</string>
@@ -22,26 +31,24 @@
     <string name="placeholder_author_text">John Abiodun</string>
     <string name="placeholder_book_name_text">Trisa’s Trove</string>
     <string name="book_image">book image</string>
+    <string name="login_button">Login</string>
+    <string name="app_logo_img">app logo</string>
+    <string name="application_name">BOOK SPACE</string>
+    <string name="create">Create</string>
+
+    <!-- Form Validation   -->
+    <string name="register_activity_field_isEmpty">Field cannot be empty</string>
+    <string name="register_activity_password_matching">Password does not match</string>
+    <!-- Login and Signup fragments   -->
     <string name="label_email">Email address</string>
     <string name="label_password">Enter password</string>
     <string name="label_create_password">Create password</string>
     <string name="label_confirm_password">Confirm password</string>
-    <string name="app_logo_img">app logo</string>
-    <string name="application_name">BOOK SPACE</string>
-    <string name="user_registration">Register</string>
-    <string name="register_button">Register</string>
     <string name="forgot_password_button">Forgot Password?</string>
     <string name="social_accounts">Or Continue with Social Accounts</string>
     <string name="google_sign_in_button">google sign button</string>
     <string name="facebook_sign_in_button">facebook sign-in button</string>
     <string name="twitter_sign_in_button">twitter sign-in button</string>
-    <string name="login_button">Login</string>
-    <string name="register_activity_field_isEmpty">Field cannot be empty</string>
-    <string name="register_activity_password_matching">Password does not match</string>
-
-
-    <!-- Firebase Database Nodes -->
-
     <string name="cancel_button">Cancel</string>
     <string name="cancel_action_button">cancel action button</string>
     <string name="resend_email_button">Resend</string>
@@ -49,20 +56,26 @@
     <string name="sign_out">Sign Out</string>
     <string name="action_logout">LogOut</string>
     <string name="action_login">LogIn</string>
-    <string name="log_in">Log in</string>
+    <string name="log_in">Log In</string>
     <string name="label_enter_password">Enter password</string>
+    <string name="set_action_title">LOGOUT</string>
+    <string name="user_registration">Register</string>
+    <string name="register_button">Register</string>
+
     <string name="authentication_failure">Authentication failed!</string>
     <string name="new_folder">New Folder</string>
     <string name="about">About</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="remove">Remove</string>
-    <string name="menu_logout">LogOut</string>
-    <string name="menu_account_settings">Account Settings</string>
 
+    <!-- Social login config for Google, Facebook, and ...   -->
     <style name="SHA1">66:C5:D4:23:0E:11:E7:E9:8F:A8:31:FF:4F:48:5C:6D:65:5F:51:FD</style>
-
-    <style name="MD5">11:58:FE:E3:9C:B1:BF:47:09:11:D8:E1:10:D3:7A:3B</style>
+    <string name="facebook_application_id">696268765482541</string>
+    <string name="facebook_login_protocol_scheme">fb696268765482541</string>
+    <!-- Linked to AndroidManifest.xml file -->
+    <string name="facebook_client_token">b011fc0b73f6ea4ebd92175d41cc0714</string>
+<!--    3182b1b9bda806eea1e51bbda417387a8443cf8c-->
 
     <string name="next">Next</string>
     <string name="previous">Previous</string>
@@ -74,10 +87,9 @@
 
 
     <!-- Dialog Builder -->
-    <string name="confirm_action">Are You Sure You Want To Logout</string>
+    <string name="confirm_action">Are You Sure You Want To Logout?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="set_action_title">LOGOUT</string>
     <string name="choose_photo_from_memory">Choose photo from memory</string>
     <string name="take_photo">Take a Photo</string>
 
@@ -92,6 +104,6 @@
     <string name="change_password">Change Password</string>
     <string name="nav_header_edit_button">Edit Button</string>
     <string name="send_button">Send</string>
-    <string name="action_send_email_button">Send Reset Email Button</string>
+
 
 </resources>

@@ -59,6 +59,7 @@
 
         </LinearLayout>
 
+        <!--
         <TextView
             android:id="@+id/text_register"
             android:layout_width="wrap_content"
@@ -69,19 +70,19 @@
             android:textColor="@color/black"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/app_details" />
+            app:layout_constraintTop_toBottomOf="@+id/app_details" /> -->
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_16"
+            android:layout_marginTop="@dimen/margin_64"
             android:layout_marginEnd="@dimen/margin_16"
             android:layout_marginStart="@dimen/margin_16"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_register">
+            app:layout_constraintTop_toBottomOf="@+id/app_details">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textField_email"
@@ -216,6 +217,7 @@
             android:layout_marginStart="@dimen/margin_16"
             android:layout_marginTop="@dimen/margin_12"
             android:layout_marginEnd="@dimen/margin_16"
+            android:layout_marginBottom="@dimen/margin_32"
             android:orientation="horizontal"
             android:paddingStart="@dimen/padding_16"
             android:paddingEnd="@dimen/padding_16"
@@ -282,7 +284,7 @@
             android:padding="@dimen/margin_8"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/text_register"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/app_details" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

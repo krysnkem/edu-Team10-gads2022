@@ -2,21 +2,13 @@ package app.krys.bookspaceapp.ui.signup_login
 
 
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
-import androidx.fragment.app.DialogFragment
 import app.krys.bookspaceapp.R
 import app.krys.bookspaceapp.databinding.EmailVerificationDialogBinding
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.internal.ViewUtils.hideKeyboard
-import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -25,61 +17,25 @@ import com.google.firebase.ktx.Firebase
 
 class ResendEmailVerificationDialog : BaseFragment(), View.OnClickListener {
 
+    private val TAG = this::class.simpleName
+
     private var _binding: EmailVerificationDialogBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private lateinit var emailField: TextInputEditText
-    private lateinit var passwordField: TextInputEditText
-    private lateinit var cancelButton: MaterialButton
-    private lateinit var resendButton: MaterialButton
-    private lateinit var _progressBar: ProgressBar
-    private lateinit var contentContainer: LinearLayout
-    private lateinit var verifyState: TextView
-
     private lateinit var auth: FirebaseAuth
-
-    // Form validator
-    private var formValidator: FormValidator? = null
-    // Send email to new user for verification
-    private var emailVerificationSender: EmailVerificationSender? = null
-
-    // Required activity / context
-    private lateinit var activityContext: Activity
-
-
-    private fun DialogFragment.setUpWidthToMatchParent() {
-        dialog?.window?.setLayout(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-        )
-    }
-
-    // override fun getTheme(): Int = R.style.NoMarginDialog
 
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?,
-        ): View {
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
 
         _binding = EmailVerificationDialogBinding.inflate(inflater, container, false)
-        val view = binding.root
 
-        emailField = binding.editTextEmail
-        passwordField = binding.editTextEmail
-        cancelButton = binding.cancelBtn
-        resendButton = binding.resendEmailBtn
-        _progressBar = binding.progressBar
-        contentContainer = binding.contentContainer
-        verifyState = binding.verifyState
-
-        // Initialize for required activity
-        activityContext = requireActivity()
-
-        return view
+        return binding.root
     }
 
 
@@ -87,21 +43,11 @@ class ResendEmailVerificationDialog : BaseFragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //setUpWidthToMatchParent()
-
-        setProgressBar(_progressBar) // Set value
-        setToasterContext(activityContext) // Set value
+        setProgressBar(binding.progressBar) // Set value
 
         auth = Firebase.auth // Initialize
 
-        // Initialize form validator
-        if (formValidator == null )
-            formValidator = FormValidator(emailField, passwordField)
-
-        if (emailVerificationSender == null)
-            emailVerificationSender = EmailVerificationSender(requireActivity())
-
-        initialButtonForClickAction()
+        initializeButtonForClickAction()
     }
 
 
@@ -114,9 +60,9 @@ class ResendEmailVerificationDialog : BaseFragment(), View.OnClickListener {
     }
 
 
-    private fun initialButtonForClickAction() {
-        cancelButton.setOnClickListener(this)
-        resendButton.setOnClickListener(this)
+    private fun initializeButtonForClickAction() {
+        binding.cancelBtn.setOnClickListener(this)
+        binding.resendEmailBtn.setOnClickListener(this)
     }
 
 
@@ -154,45 +100,44 @@ class ResendEmailVerificationDialog : BaseFragment(), View.OnClickListener {
 
     /** -------------------------FIREBASE SETUP --------------------- */
     private fun resendEmailVerificationLink () {
-        hideKeyboard(contentContainer)
-
-        resendButton.isEnabled = false
+        hideKeyboard(requireView())
+        binding.resendEmailBtn.isEnabled = false
+        val email = binding.editTextEmail
+        val password = binding.editTextPassword
 
         /* Validate input fields
         * Check for empty string */
-        if (formValidator != null) {
-            if (!formValidator!!.validateForm()) {
-                snackBar(contentContainer, getString(R.string.register_activity_field_isEmpty))
-                resendButton.isEnabled = true
-                return
-            }
+        if (!validateForm(email, password)) {
+            snackBar(requireView(), getString(R.string.register_activity_field_isEmpty))
+            binding.resendEmailBtn.isEnabled = true
+            return
         }
-
-        authenticateAndResendEmail(emailField.text.toString(), passwordField.text.toString())
-
-        resendButton.isEnabled = true
+        authenticateAndResendEmail(email.text.toString(), password.text.toString())
     }
 
 
 
     private fun authenticateAndResendEmail(email: String, password: String) {
-
         showProgressBar()
         val credential = EmailAuthProvider.getCredential(email, password)
 
         auth.signInWithCredential(credential)
             .addOnCompleteListener {task ->
                 if (task.isSuccessful) {
+                    binding.resendEmailBtn.isEnabled = true
                     // Send verification email to user's email address
-                    emailVerificationSender?.send(auth.currentUser)
+                    val emailVerificationSender = EmailVerificationSender(requireActivity())
+                    emailVerificationSender.send(auth.currentUser)
                     hideProgressBar()
                     auth.signOut()
                     closeFragment()
                 }
         }.addOnFailureListener {
-                toastMessage("Invalid Credentials.\n Please, try again")
+                snackBar(requireView(), "${it.message}\n Please, try again")
+                binding.resendEmailBtn.isEnabled = true
         }
     }
+
 
 
     override fun onDestroyView() {

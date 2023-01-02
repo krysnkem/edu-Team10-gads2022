@@ -60,5 +60,10 @@
         android:name="app.krys.bookspaceapp.ui.account.settings.AccountSettingsFragment"
         android:label="@string/menu_account_settings"
         tools:layout="@layout/fragment_account_settings" />
+    <dialog
+        android:id="@+id/nav_logout"
+        android:name="app.krys.bookspaceapp.ui.account.settings.LogoutDialogFragment"
+        android:label="@string/menu_logout"
+        tools:layout="@layout/fragment_logout_dialog" />
 
 </navigation>

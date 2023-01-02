@@ -28,12 +28,12 @@ class ResetPasswordDialogFragment : BaseFragment(), View.OnClickListener  {
     private lateinit var sendButton: MaterialButton
     private lateinit var _progressBar: ProgressBar
     // Required activity / context
-    private lateinit var activityContext: Activity
+    // private lateinit var activityContext: Activity
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentResetPasswordDialogBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -41,7 +41,7 @@ class ResetPasswordDialogFragment : BaseFragment(), View.OnClickListener  {
         initView()
 
         // Initialize for required activity
-        activityContext = requireActivity()
+        // activityContext = requireActivity()
 
         return view
     }
@@ -50,7 +50,7 @@ class ResetPasswordDialogFragment : BaseFragment(), View.OnClickListener  {
         super.onViewCreated(view, savedInstanceState)
 
         setProgressBar(_progressBar) // Set value
-        setToasterContext(activityContext) // Set value
+        // setToasterContext(activityContext) // Set value
 
         initialButtonForClickAction()
     }
