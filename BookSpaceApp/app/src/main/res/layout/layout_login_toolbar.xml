@@ -16,6 +16,7 @@
         android:contentDescription="Back Button"
         android:src="@drawable/ic_arrow_back_24"
         app:tint="@color/white"
+        android:padding="8dp"
         tools:ignore="TouchTargetSizeCheck" />
 
     <TextView
@@ -27,6 +28,6 @@
         android:text="@string/log_in"
         android:layout_centerVertical="true"
         android:textColor="@color/white"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
 
 </RelativeLayout>

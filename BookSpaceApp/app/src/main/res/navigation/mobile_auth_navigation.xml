@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_auth_navigation"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="app.krys.bookspaceapp.ui.signup_login.LoginFragment"
+        android:label="@string/log_in"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_signupFragment"
+            app:destination="@id/signupFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_loginFragment_to_mainActivity"
+            app:destination="@id/mainActivity" />
+        <argument
+            android:name="isNewUser"
+            app:argType="string"
+            android:defaultValue="-1" />
+        <argument
+            android:name="emailAddress"
+            app:argType="string"
+            android:defaultValue="-1" />
+    </fragment>
+    <fragment
+        android:id="@+id/signupFragment"
+        android:name="app.krys.bookspaceapp.ui.signup_login.SignupFragment"
+        android:label="@string/user_registration"
+        tools:layout="@layout/fragment_signup" >
+        <action
+            android:id="@+id/action_signupFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+
+    <activity android:id="@+id/mainActivity"
+        android:name="app.krys.bookspaceapp.MainActivity"
+        tools:layout="@layout/activity_main"
+        android:label="@string/menu_home"/>
+    <action
+        android:id="@+id/mainActivityDes"
+        app:destination="@id/mainActivity"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"
+        app:popUpTo="@id/mainActivity"
+        app:popUpToInclusive="true" />
+</navigation>

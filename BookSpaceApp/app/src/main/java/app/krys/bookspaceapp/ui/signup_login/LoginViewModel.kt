@@ -16,7 +16,7 @@ class LoginViewModel : ViewModel() {
 
 //    var signInProvider: Boolean? = null
 
-    val _signInProvider = MutableLiveData<Boolean>()
+    private val _signInProvider = MutableLiveData<Boolean>()
     val signInProvider: LiveData<Boolean> = _signInProvider
     init {
         Firebase.auth.currentUser?.let { getSignInProvider(it) }

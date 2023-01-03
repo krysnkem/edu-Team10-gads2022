@@ -3,16 +3,21 @@ package app.krys.bookspaceapp.ui.signup_login
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.findNavController
+import app.krys.bookspaceapp.MainActivity
 import app.krys.bookspaceapp.R
 import com.firebase.ui.auth.*
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -24,8 +29,6 @@ open class BaseFragment : DialogFragment() {
 
 
     private var progressBar: ProgressBar? = null
-    private var context: Activity? = null
-    private var iItems: IItems? = null
     private var _signInProviderType: Boolean = true
 
     var signInProviderType: Boolean
@@ -38,9 +41,6 @@ open class BaseFragment : DialogFragment() {
         progressBar = bar
     }
 
-    fun setToasterContext(_context: Activity?) {
-        context = _context
-    }
 
     fun showProgressBar() {
         progressBar?.visibility = View.VISIBLE
@@ -135,31 +135,23 @@ open class BaseFragment : DialogFragment() {
                 .build()
         }
 
+        _signInProviderType = false
         this.activityResultForSignIn.launch(signInIntent)
     }
 
 
     /** Helper function for registering startActivityForResult */
     private fun onActivityResult(result: FirebaseAuthUIAuthenticationResult) {
-
         val response = result.idpResponse
 
         if (result.resultCode == Activity.RESULT_OK) {
-
-            val user = Firebase.auth.currentUser
-
-            signInProviderType = false
-            Log.d(TAG, "SOCIAL-LOGIN-DATA: $user")
-            /** IF a user is registering for the first time, display one message and Redirect User
-             * to Home Screen if authentication process is successful.
-             * ELSE display another message and Redirect old user to Home Screen on successful login */
-            val msg = if (isNewUser(user!!)) "Thanks for signing up!!"  else "Welcome back!"
-
-            snackBar(requireView(), msg)
-            iItems!!.redirectFromLoginScreenToHome()
+            // Log.d(TAG, "SOCIAL-LOGIN-DATA: ${Firebase.auth.currentUser} :: $signInProviderType")
+            // Redirect User if authentication process is successful
+             findNavController().navigate(R.id.mainActivityDes, null)
+             requireActivity().finish()
 
         } else { // Failure: response.getError().getErrorCode() and handle error.
-            //throw Exception("Error: ${response?.error?.errorCode}")
+            // throw Exception("Error: ${response?.error?.errorCode}")
             // Sign in failed
             this.signOut()
 
@@ -174,21 +166,38 @@ open class BaseFragment : DialogFragment() {
                 return
             }
 
-            snackBar(requireView(),"Unknown Error Occurred!")
-            Log.d(TAG, "Unknown Error Occurred: ${response.error}")
+            if (response.error?.message == EMAIL_TAKEN) {
+                snackBar(requireView(),"This Email Address has been used.")
+            }
+            snackBar(requireView(),"Unknown Error Occurred")
+            //Log.d(TAG, "Unknown Error Occurred: ${response.error}")
         }
     }
 
 
 
-    /** Method that checks whether a user is registering/login for the first time  */
-    private fun isNewUser(user: FirebaseUser): Boolean {
+
+
+    /** Method that checks whether a user is registering as new user or login as an old user  */
+    /*fun isNewUser(user: FirebaseUser): String {
         val metadata = user.metadata
         Log.d(TAG, "META-DATA: $metadata")
-        return metadata!!.creationTimestamp == metadata.lastSignInTimestamp
+        val state = metadata!!.creationTimestamp == metadata.lastSignInTimestamp
+        return if (state) "Thanks for signing up!!"  else "Welcome back!"
+    }*/
 
+
+
+    /** Method protects  every Activity or Fragment we want to protect being accessed
+     * after the user is authenticated. finish() should be called at the end to
+     * remove previous Activity from the stack to prevent user from going back to it
+     * when back button is pressed */
+    private fun redirectFromLoginScreenToHome() {
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        requireActivity().finish()
     }
-
 
 
 
@@ -201,13 +210,41 @@ open class BaseFragment : DialogFragment() {
             }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            iItems = (context as IItems)
-        } catch (e: Exception) {
-            e.message?.let { Log.d(TAG, it) }
+
+    fun validateForm(email: TextInputEditText,
+                     password: TextInputEditText,
+                     confirmPassword: TextInputEditText? = null): Boolean {
+
+        var valid = true
+
+        if (TextUtils.isEmpty(email.text.toString())) {
+            email.error = "Required."
+            valid = false
+        } else {
+            email.error = null
         }
+
+        if (TextUtils.isEmpty(password.text.toString())) {
+            password.error = "Required."
+            valid = false
+        } else {
+            password.error = null
+        }
+
+        confirmPassword?.let {
+            if (TextUtils.isEmpty(confirmPassword.text.toString())) {
+                it.error = "Required."
+                valid = false
+            } else {
+                it.error = null
+            }
+        }
+
+        return valid
+    }
+
+    companion object {
+        const val EMAIL_TAKEN = "Developer error"
     }
 
 }

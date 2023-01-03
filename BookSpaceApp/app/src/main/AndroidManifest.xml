@@ -22,6 +22,9 @@
         android:theme="@style/Theme.BookSpaceApp"
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="33">
+
+        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+
         <activity
             android:name=".ui.signup_login.SignUpLoginActivity"
             android:exported="true"

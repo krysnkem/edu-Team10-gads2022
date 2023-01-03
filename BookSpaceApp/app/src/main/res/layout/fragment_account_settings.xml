@@ -13,35 +13,24 @@
         android:animateLayoutChanges="true"
         tools:context=".ui.account.settings.AccountSettingsFragment">
 
-        <TextView
-            android:id="@+id/text_acc_setting_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_24"
-            android:text="@string/account_settings"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            app:civ_border_color="#999"
-            app:civ_border_width="2dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="@dimen/margin_8"
+            android:layout_marginTop="@dimen/margin_32"
+            android:layout_marginEnd="@dimen/margin_8"
             android:clickable="true"
+            android:contentDescription="@string/profile_image"
             android:focusable="true"
             android:src="@drawable/default_avatar"
-            android:layout_centerHorizontal="true"
-            android:contentDescription="@string/profile_image"
-            android:layout_marginStart="@dimen/margin_8"
-            android:layout_marginTop="@dimen/margin_24"
-            android:layout_marginEnd="@dimen/margin_8"
+            app:civ_border_color="#999"
+            app:civ_border_width="2dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_acc_setting_title"/>
-
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/cameraButton"
@@ -50,26 +39,26 @@
             android:backgroundTint="@color/colorBackgroundTin"
             android:contentDescription="@string/nav_header_edit_button"
             android:src="@android:drawable/ic_menu_camera"
-            app:tint="@color/blue_accent"
             app:layout_constraintBottom_toTopOf="@+id/button_change_photo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.591"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_acc_setting_title"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toTopOf="@+id/profile_image"
+            app:layout_constraintVertical_bias="1.0"
+            app:tint="@color/blue_accent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_change_photo"
             style="@style/Widget.OneNote.Button.NoBKColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/upload_photo"
             android:layout_below="@+id/profile_image"
-            android:layout_marginTop="@dimen/margin_8"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_16"
+            android:text="@string/upload_photo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_image"/>
+            app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edit_text_username_layout"
@@ -171,10 +160,8 @@
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/profile_image"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/profile_image"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toTopOf="@+id/profile_image" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

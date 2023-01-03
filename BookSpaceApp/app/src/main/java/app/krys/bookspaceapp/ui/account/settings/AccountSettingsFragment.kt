@@ -4,8 +4,10 @@ package app.krys.bookspaceapp.ui.account.settings
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
@@ -17,12 +19,16 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import app.krys.bookspaceapp.R
 import app.krys.bookspaceapp.databinding.FragmentAccountSettingsBinding
 import app.krys.bookspaceapp.ui.signup_login.*
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
@@ -36,7 +42,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
-import com.nostra13.universalimageloader.core.ImageLoader
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -73,10 +78,6 @@ class AccountSettingsFragment : BaseFragment() {
     private lateinit var currentPassword: TextInputEditText
     private lateinit var _progressBar: ProgressBar
     private lateinit var cameraButton: ImageButton
-
-    // on below line we are creating
-    // a variable for image loader.
-    private lateinit var imageLoader: ImageLoader
 
     // Send email to new user for verification
     private var emailVerificationSender: EmailVerificationSender? = null
@@ -145,8 +146,7 @@ class AccountSettingsFragment : BaseFragment() {
         // Cloud Storage Init
         storageReference = FirebaseStorage.getInstance().reference
 
-        // Initialize ImageLoader
-        imageLoader = ImageLoader.getInstance()
+        // Initialize Image compressor util
         imageCompressor = ImageCompressor(requireContext())
 
 
@@ -247,7 +247,8 @@ class AccountSettingsFragment : BaseFragment() {
         Log.d(TAG, "saveButtonState: Button state -> $flag")
         stateFlag = flag
         if (flag) {
-            changePhotoButton.setTextColor(requireActivity().resources.getColor(R.color.blue_accent))
+            val color = ResourcesCompat.getColor(resources, R.color.blue_accent, requireContext().theme)
+            changePhotoButton.setTextColor(color)
             changePhotoButton.isEnabled = true
         } else {
             changePhotoButton.setTextColor(Color.LTGRAY)
@@ -264,9 +265,12 @@ class AccountSettingsFragment : BaseFragment() {
     private fun onSocialLoginMethod() {
         user?.let {
             if (!getSignInProvider(it)) {
+
+                val color = ResourcesCompat.getColor(resources, R.color.reader_text_color, requireContext().theme)
+
                 // All buttons: Disabled and change text and background colors
                 saveButton.setBackgroundColor(Color.LTGRAY)
-                saveButton.setTextColor(requireActivity().resources.getColor(R.color.reader_text_color))
+                saveButton.setTextColor(color)
                 profileImage.isEnabled = false
                 saveButton.isEnabled = false
                 // All buttons: Removed from the view
@@ -276,7 +280,7 @@ class AccountSettingsFragment : BaseFragment() {
                 // All Editable fields
                 email.isEnabled = false
                 userName.isEnabled = false
-                currentPassword.setHintTextColor(Color.LTGRAY)
+                currentPassword.setHintTextColor(ColorStateList.valueOf(color))
                 currentPassword.isEnabled = false
             }
         }
@@ -507,7 +511,8 @@ class AccountSettingsFragment : BaseFragment() {
             // Set user data field
             email.setText(user?.email)
             userName.setText(oldUsername)
-            imageLoader.displayImage(user?.profile_image, profileImage)
+            // imageLoader.displayImage(user?.profile_image, profileImage)
+            setProfileImage(user?.profile_image)
         }
     }
 
@@ -541,11 +546,21 @@ class AccountSettingsFragment : BaseFragment() {
             mSelectedImageUri = imagePath
             changePhotoButtonState(true)
             Log.d(TAG, "getImagePath: got the image uri: $mSelectedImageUri")
-            // on below line we are calling image loader and setting
+            // on below line we are calling Glide and setting it
             // to display our image in our image view from image url
-            imageLoader.displayImage(imagePath.toString(), profileImage)
+            setProfileImage(imagePath.toString())
         }
     }
+
+
+    private fun setProfileImage(url: String?) {
+        val defaultImage: Drawable? = ContextCompat.getDrawable(requireContext(), R.drawable.default_avatar)
+        val requestOptions: RequestOptions = RequestOptions()
+            .placeholder(defaultImage)
+
+        Glide.with(this).setDefaultRequestOptions(requestOptions).load(url).into(profileImage)
+    }
+
 
     /** Get bitmap  from user's camera when photo is taken with their camera */
     private fun getImageBitmap(bitmap: Bitmap?) {
