@@ -36,7 +36,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import com.nostra13.universalimageloader.core.ImageLoader
 import de.hdodenhof.circleimageview.CircleImageView
 
 
@@ -78,15 +77,10 @@ class MainActivity : AppCompatActivity(), IUser {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-<<<<<<< HEAD
                 R.id.nav_home, R.id.nav_account_settings
             ), drawerLayout
         )
-=======
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_account_settings, R.id.nav_logout
-            ), drawerLayout )
->>>>>>> origin/user-auth-refactored
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         createChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME)
@@ -113,20 +107,12 @@ class MainActivity : AppCompatActivity(), IUser {
             val name = navHeader.findViewById<TextView>(R.id.user_name)
             val email = navHeader.findViewById<TextView>(R.id.email)
             val profileImage = navHeader.findViewById<CircleImageView>(R.id.profile_image)
-<<<<<<< HEAD
-            val imageLoader = ImageLoader.getInstance()
-=======
->>>>>>> origin/user-auth-refactored
 
             // Get user data for nav header
             userDataViewModel.userData.observe(this) { user ->
                 name.text = user?.name
                 email.text = user?.email
-<<<<<<< HEAD
-                imageLoader.displayImage(user?.profile_image, profileImage)
-=======
                 setProfileImage(user?.profile_image, profileImage)
->>>>>>> origin/user-auth-refactored
             }
 
             // On click, display AccountSettingsFragment
@@ -238,80 +224,11 @@ class MainActivity : AppCompatActivity(), IUser {
         val db = FirebaseDatabase.getInstance().reference
         val user = auth.currentUser
 
-<<<<<<< HEAD
-        /** -------- Get user data and use them to prefill input views in nav_header_main.xml ----------- */
-        private fun getUserAccountData() {
-
-            val db = FirebaseDatabase.getInstance().reference
-            val user = auth.currentUser
-
-            if (user != null) {
-                getSignInProvider(user)
-                Log.d(TAG, "Method 111111111111: Get User Data: ${user.providerData}")
-                viewModel.signInProvider.observe(this) { signInProvider ->
-                    if (signInProvider) {
-                        var userData: User? = null
-                        /** Query Method 1 */
-                        /**val query2: Query = db.child(getString(R.string.db_node_users))
-                        .orderByChild(getString(R.string.field_user_id))
-                        .equalTo(user!!.uid)*/
-
-                        /** Query Method 1 */
-                        val query1: Query = db.child(getString(R.string.db_node_users))
-                            .orderByKey()// .orderByValue() for a field value such as 'string'
-                            .equalTo(user.uid)
-
-                        query1.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(snapshot: DataSnapshot) {
-
-                                for (singleSnapshot: DataSnapshot in snapshot.children) {
-                                    userData = singleSnapshot.getValue<User>()
-                                    Log.d(TAG, "Method 1: Get User Data: ${userData.toString()}")
-                                }
-                                // Get user data and send the data to observe
-                                userDataViewModel.getUserData(userData)
-                            }
-
-                            override fun onCancelled(error: DatabaseError) {
-                                Log.e(TAG, "ERROR FROM DB: ${error.details}")
-                            }
-                        })
-
-                    } else {
-                        // Get user data and send the data to observe
-                        val userData = User(
-                            name = user.displayName,
-                            profile_image = user.photoUrl.toString(),
-                            email = user.email
-                        )
-                        userDataViewModel.getUserData(userData)
-                    }
-                }
-            }
-=======
         getSignInProvider(user!!)
->>>>>>> origin/user-auth-refactored
 
         Log.d(TAG, "Method 2: Get User Data: ${user.providerData}")
 
-<<<<<<< HEAD
 
-        }
-
-        private fun createDownloadChannel(channelId: String, channelName: String) {
-            // TODO: Step 1.6 START create a channel
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val downloadNotificationChannel =
-                    NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_LOW)
-                        .apply {
-                            enableLights(true)
-                            lightColor = ContextCompat.getColor(
-                                this@MainActivity.applicationContext,
-                                R.color.blue_accent
-                            )
-                            description = "Time for Breakfast"
-                            setShowBadge(false)
-=======
         viewModel.signInProvider.observe(this) { signInProvider ->
             if (signInProvider) {
                 var userData: User? = null
@@ -321,7 +238,6 @@ class MainActivity : AppCompatActivity(), IUser {
 
                 query.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
->>>>>>> origin/user-auth-refactored
 
                         for (singleSnapshot: DataSnapshot in snapshot.children) {
                             userData = singleSnapshot.getValue<User>()
