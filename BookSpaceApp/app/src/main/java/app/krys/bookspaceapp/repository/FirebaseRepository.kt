@@ -1,8 +1,11 @@
 package app.krys.bookspaceapp.repository
 
+import android.app.NotificationManager
 import android.content.Context
+import android.net.Uri
 import android.text.TextUtils
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.work.*
@@ -38,11 +41,6 @@ class FirebaseRepository {
     val folderInfoList: LiveData<List<FolderInfo>> = _folderInfoList
 
 
-    private lateinit var folderQuery: Query
-    lateinit var folderInfoOptions: FirebaseRecyclerOptions<FolderInfo>
-
-
-
     private val folderValueEventListener: ValueEventListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             val folderList = mutableListOf<String>()
@@ -64,17 +62,17 @@ class FirebaseRepository {
     init {
         if (user != null) {
             uid = user.uid
-            folderQuery = database.child("foldersInfo/${uid}").orderByChild("dateModified")
-            folderInfoOptions = FirebaseRecyclerOptions.Builder<FolderInfo>()
-                .setQuery(folderQuery, FolderInfo::class.java)
-                .build()
-
-            database.child("foldersInfo/${user.uid}").addValueEventListener(
-                folderValueEventListener
-            )
+//            database.child("foldersInfo/${user.uid}").addValueEventListener(
+//                folderValueEventListener
+//            )
         }
 
+    }
 
+    fun attachFolderInfoEventListener() {
+        database.child("foldersInfo/${user?.uid}").addValueEventListener(
+            folderValueEventListener
+        )
     }
 
     fun removeFolderInfoEventListener() {
@@ -96,8 +94,8 @@ class FirebaseRepository {
                 folderName = folder_name,
                 folderId = key.toString(),
                 numberOfFiles = 0,
-                dateCreated = System.currentTimeMillis(),
-                dateModified = System.currentTimeMillis()
+                dateCreated = -1 * System.currentTimeMillis(),
+                dateModified = -1 * System.currentTimeMillis()
             ).toMap()
             task =
                 database.updateChildren(
@@ -114,28 +112,36 @@ class FirebaseRepository {
     @Suppress("UNCHECKED_CAST")
     suspend fun removeFolder(folderInfo: FolderInfo): Task<Void>? {
         if (user != null) {
-           return try {
-                storage.child("folderFiles/$uid/${folderInfo.folderId}").listAll().await()
-                    .let { listResult ->
-                        for (item in listResult.items) {
-                            item.delete().await()
-                        }
+            return try {
+//                storage.child("folderFiles/$uid/${folderInfo.folderId}").listAll().await()
+//                    .let { listResult ->
+//                        for (item in listResult.items) {
+//                            item.delete().await()
+//                        }
+//                    }
+                val bookSnapShotList =
+                    database.child("folders/${user.uid}/${folderInfo.folderId!!}").get().await()
+                for (bookSnapShot in bookSnapShotList.children) {
+                    val bookItem = bookSnapShot.getValue<BookInfo>()
+                    if (bookItem != null) {
+                        Log.d(TAG, "removeFolder: Removing ${bookItem.bookName}")
+                        removeBook(bookItem)
                     }
+                }
                 database.updateChildren(
                     hashMapOf(
-                        "folders/${user.uid}/${folderInfo.folderId!!}" to null,
+                        "folders/${user.uid}/${folderInfo.folderId}" to null,
                         "foldersInfo/${user.uid}/${folderInfo.folderId}" to null
                     ) as Map<String, Any>
                 )
             } catch (e: Exception) {
                 e.printStackTrace()
-               Log.e(TAG, "removeFolder: ${e.message}", )
-               null
+                Log.e(TAG, "removeFolder: ${e.message}")
+                null
             }
         } else {
             return null
         }
-
     }
 
     fun createFileUploadWorkRequests(
@@ -143,10 +149,10 @@ class FirebaseRepository {
         folderId: String,
         context: Context,
         coverImage: String,
-        bookFileUri: String
+        notificationId: Int
     ): Operation {
         //build data
-        val data = createData(metaData, folderId, coverImage, bookFileUri)
+        val data = createDataItem(metaData, folderId, coverImage, notificationId)
         //create WorkRequests
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -159,24 +165,90 @@ class FirebaseRepository {
             .setConstraints(constraints.build())
             .setInputData(data)
             .build()
-        val PostBookInfoWorkRequest = OneTimeWorkRequestBuilder<PostBookInfoWorker>()
+        val postBookInfoWorkRequest = OneTimeWorkRequestBuilder<PostBookInfoWorker>()
             .setConstraints(constraints.build())
             .setInputData(data)
             .build()
 
         return WorkManager.getInstance(context).beginWith(uploadBookCoverWorkRequest)
             .then(uploadBookFileWorkRequest)
-            .then(PostBookInfoWorkRequest)
+            .then(postBookInfoWorkRequest)
             .enqueue()
 
     }
 
-    private fun createData(
+    fun createMultipleFileUploadWorkRequests(
+        metaDataList: List<BookMetaData>,
+        folderId: String,
+        context: Context,
+        coverImages: Map<String, Uri>,
+    ): List<Operation> {
+
+        val notificationManager = ContextCompat.getSystemService(
+            context,
+            NotificationManager::class.java
+        ) as NotificationManager
+
+        //create a list of operations
+        val operationList = mutableListOf<Operation>()
+        //build data
+
+        metaDataList.forEach { metaData ->
+            val coverImage = coverImages[metaData.fileName!!]?.toString()
+            val notificationId = System.currentTimeMillis().toInt()
+
+            notificationManager.createUniqueIndeterminateNotification(
+                "Initializing",
+                context,
+                notificationId
+            )
+            if (coverImage != null) {
+                operationList.add(
+                    createFileUploadWorkRequests(
+                        metaData,
+                        folderId,
+                        context,
+                        coverImage,
+                        notificationId
+                    )
+                )
+
+            }
+        }
+        return operationList
+
+
+    }
+
+
+//    private fun createData(
+//        metaData: BookMetaData,
+//        folderId: String, coverImage: String, bookFileUri: String
+//    ): Data {
+//        val bookName: String = if (TextUtils.isEmpty(metaData.title)) {
+//            metaData.fileName.toString()
+//        } else {
+//            metaData.title.toString()
+//        }
+//        val dataBuilder = Data.Builder().apply {
+//            putString(KEY_BOOK_NAME, bookName)
+//            putString(KEY_OWNER_ID, user!!.uid)
+//            putString(KEY_FOLDER_ID, folderId)
+//            putString(KEY_AUTHOR, metaData.author)
+//            putLong(KEY_BOOK_SIZE, metaData.size!!)
+//            putLong(KEY_DATE_ADDED, -1 * System.currentTimeMillis())
+//            putString(COVER_IMAGE_URI, coverImage)
+//            putString(BOOK_FILE_URI, bookFileUri)
+//            putInt(KEY_UNIQUE_NOTIFICATION_ID, System.currentTimeMillis().toInt())
+//        }
+//        return dataBuilder.build()
+//    }
+
+    private fun createDataItem(
         metaData: BookMetaData,
-        folderId: String, coverImage: String, bookFileUri: String
+        folderId: String, coverImage: String, notificationId: Int
     ): Data {
-        var bookName: String = metaData.title ?: metaData.fileName ?: "N/A"
-        bookName = if (TextUtils.isEmpty(metaData.title)) {
+        val bookName: String = if (TextUtils.isEmpty(metaData.title)) {
             metaData.fileName.toString()
         } else {
             metaData.title.toString()
@@ -187,9 +259,10 @@ class FirebaseRepository {
             putString(KEY_FOLDER_ID, folderId)
             putString(KEY_AUTHOR, metaData.author)
             putLong(KEY_BOOK_SIZE, metaData.size!!)
-            putLong(KEY_DATE_ADDED, System.currentTimeMillis())
+            putLong(KEY_DATE_ADDED, -1 * System.currentTimeMillis())
             putString(COVER_IMAGE_URI, coverImage)
-            putString(BOOK_FILE_URI, bookFileUri)
+            putString(BOOK_FILE_URI, metaData.uri.toString())
+            putInt(KEY_UNIQUE_NOTIFICATION_ID, notificationId)
         }
         return dataBuilder.build()
     }
@@ -204,12 +277,57 @@ class FirebaseRepository {
             .build()
     }
 
-    suspend fun downloadBookFile(url: String): ByteArray? {
+    fun getRecentBooksOptions(): FirebaseRecyclerOptions<BookInfo> {
+        return FirebaseRecyclerOptions.Builder<BookInfo>()
+            .setQuery(getRecentBooksQuery(), BookInfo::class.java)
+            .build()
+    }
 
+    private fun getRecentBooksQuery(): Query {
+        return database.child("recentBooks/${uid}").orderByChild("lastRead")
+    }
+
+    suspend fun removeBook(bookInfo: BookInfo): Task<Void> {
+        database.updateChildren(
+            mapOf(
+                "folders/${bookInfo.ownerId}/${bookInfo.folderId}/${bookInfo.bookId}" to null,
+                "recentBooks/${bookInfo.ownerId}/${bookInfo.bookId}" to null,
+                "foldersInfo/${bookInfo.ownerId}/${bookInfo.folderId}/numberOfFiles" to ServerValue.increment(
+                    -1
+                ),
+                "foldersInfo/${bookInfo.ownerId}/${bookInfo.folderId}/dateModified" to -1 * System.currentTimeMillis()
+            )
+        ).await()
+        storage.child("folderFiles/${bookInfo.ownerId}/${bookInfo.folderId}/${bookInfo.bookId}.pdf")
+            .delete().await()
+        return storage.child("folderFiles/${bookInfo.ownerId}/${bookInfo.folderId}/${bookInfo.bookId}.png")
+            .delete()
+    }
+
+    suspend fun downloadBookFile(url: String): ByteArray? {
         return Firebase.storage.getReferenceFromUrl(url).getBytes(PDF_MAX_BYTES).await()
+    }
+
+    suspend fun addBookToRecent(bookInfo: BookInfo) {
+        database.updateChildren(
+            mapOf(
+                "folders/${bookInfo.ownerId}/${bookInfo.folderId}/${bookInfo.bookId}" to bookInfo.toMap(),
+                "recentBooks/${bookInfo.ownerId}/${bookInfo.bookId}" to bookInfo.toMap()
+            )
+        )
 
     }
 
+
+    fun getFolderInfosOption(): FirebaseRecyclerOptions<FolderInfo> {
+        val folderQuery: Query =
+            database.child("foldersInfo/${uid}").orderByChild("dateModified")
+        val folderInfoOptions = FirebaseRecyclerOptions.Builder<FolderInfo>()
+            .setQuery(folderQuery, FolderInfo::class.java)
+            .build()
+
+        return folderInfoOptions
+    }
 
 
     companion object {

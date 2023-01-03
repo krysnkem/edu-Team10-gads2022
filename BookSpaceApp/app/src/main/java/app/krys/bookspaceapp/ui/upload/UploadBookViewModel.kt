@@ -1,13 +1,15 @@
 package app.krys.bookspaceapp.ui.upload
 
 import android.app.Application
+import android.app.NotificationManager
 import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import androidx.work.Operation
+import app.krys.bookspaceapp._util.NOTIFICATION_ID
+import app.krys.bookspaceapp._util.createIndeterminateNotification
 import app.krys.bookspaceapp._util.writeBitmapToFile
-import app.krys.bookspaceapp.data.model.BookInfo
 import app.krys.bookspaceapp.data.model.BookMetaData
 import app.krys.bookspaceapp.data.model.FolderInfo
 import app.krys.bookspaceapp.data.pdf.ReadPdfMetadata
@@ -27,21 +29,35 @@ class UploadBookViewModel(private val application: Application) : ViewModel() {
     private var bookUri: Uri? = null
     private var pdf: ReadPdfMetadata? = null
 
-    private lateinit var frontPageBitmapUri: Uri
+    private var bookUriList = mutableListOf<Uri>()
 
-    private val _metaData = MutableLiveData<BookMetaData>()
-    val metadata: LiveData<BookMetaData> = _metaData
+//    private lateinit var frontPageBitmapUri: Uri
+
+    private val _frontPagesLiveData = MutableLiveData<Map<String, Uri>>()
+    val frontPagesLiveData: LiveData<Map<String, Uri>> = _frontPagesLiveData
+
+//    private val _metaData = MutableLiveData<BookMetaData>()
+//    val metadata: LiveData<BookMetaData> = _metaData
+
+    private val _metaDataList = MutableLiveData<List<BookMetaData>>()
+    val metadataList: LiveData<List<BookMetaData>> = _metaDataList
 
     private val _selectedFolderOption = MutableLiveData<FolderInfo>()
     val selectedFolderOption: LiveData<FolderInfo> get() = _selectedFolderOption
 
 
+//    fun loadBookFile(bookUri: Uri) {
+//        initBookUri(bookUri)
+//        initializeMetaData()
+//        getPdfMetadata()
+//    }
 
-
-    fun loadBookFile(bookUri: Uri) {
-        initBookUri(bookUri)
+    fun loadAllBookFiles(bookuriList: List<Uri>) {
+        this.bookUriList.clear()
+        this.bookUriList.addAll(bookuriList)
         initializeMetaData()
-        getPdfMetadata()
+        getPdfMetadataList()
+
     }
 
     private fun initBookUri(bookUri: Uri) {
@@ -49,60 +65,113 @@ class UploadBookViewModel(private val application: Application) : ViewModel() {
     }
 
     private fun initializeMetaData() {
-        bookUri?.let {
-            pdf = ReadPdfMetadata(it, application)
-        }
+        pdf = ReadPdfMetadata(application)
     }
 
-    private fun getPdfMetadata() {
+//    private fun getPdfMetadata() {
+//        viewModelScope.launch {
+//            try {
+//                _metaData.postValue(bookUri?.let { pdf!!.getPdfMetadata(it) })
+//            } catch (e: IOException) {
+//                e.printStackTrace()
+//            }
+//        }
+//    }
+
+    private fun getPdfMetadataList() {
         viewModelScope.launch {
             try {
-                _metaData.postValue(pdf!!.getPdfMetadata())
+                _metaDataList.postValue(pdf!!.getMetaDataList(bookUriList))
             } catch (e: IOException) {
                 e.printStackTrace()
             }
         }
     }
 
-
-
-
-    fun saveBitmapToFile(bitmap: Bitmap) {
-        viewModelScope.launch {
-            try {
-                frontPageBitmapUri = writeBitmapToFile(application, bitmap)
-            } catch (e: Exception) {
-                e.printStackTrace()
-
-            }
-
-        }
+    fun attachFolderInfoEventListener() {
+        firebaseRepository.attachFolderInfoEventListener()
     }
 
-    fun createFileUploadWorkRequests(metaData: BookMetaData, folderId: String): Operation {
-        return firebaseRepository.createFileUploadWorkRequests(
-            metaData,
+    fun detachFolderInfoEventListener() {
+        firebaseRepository.removeFolderInfoEventListener()
+    }
+
+
+//    fun saveBitmapToFile(bitmap: Bitmap) {
+//        viewModelScope.launch {
+//            try {
+//                frontPageBitmapUri = writeBitmapToFile(application, bitmap)
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//
+//            }
+//
+//        }
+//    }
+    fun saveAllBookCoverBitmapToFile(metaDataList: List<BookMetaData>){
+        viewModelScope.launch {
+            val frontPageMap = mutableMapOf<String, Uri>()
+            try {
+                metaDataList.forEach { metaData ->
+                    frontPageMap.put(metaData.fileName!!, writeBitmapToFile(application, metaData.frontPage!!))
+                }
+                _frontPagesLiveData.postValue(frontPageMap)
+            }catch (e: Exception){
+                e.printStackTrace()
+            }
+        }
+
+
+    }
+
+//    fun createFileUploadWorkRequests(metaData: BookMetaData, folderId: String): Operation {
+//        val notificationManager = ContextCompat.getSystemService(
+//            application.applicationContext,
+//            NotificationManager::class.java
+//        ) as NotificationManager
+//        notificationManager.createIndeterminateNotification(
+//            "Initializing",
+//            application.applicationContext
+//        )
+//        return firebaseRepository.createFileUploadWorkRequests(
+//            metaData,
+//            folderId,
+//            application,
+//            frontPageBitmapUri.toString(),
+//            NOTIFICATION_ID
+//        )
+//    }
+
+    fun createMutipleFileUploadWorkRequests(
+        metaDataList: List<BookMetaData>,
+        folderId: String,
+        frontPageBitmapsUris: Map<String, Uri>
+    ): List<Operation> {
+        return firebaseRepository.createMultipleFileUploadWorkRequests(
+            metaDataList,
             folderId,
             application,
-            frontPageBitmapUri.toString(),
-            bookUri.toString()
+            frontPageBitmapsUris
         )
     }
 
-    fun resetState(){
-        _metaData.postValue(BookMetaData())
+    fun resetState() {
+//        _metaData.postValue(BookMetaData())
+        _metaDataList.postValue(emptyList())
+        bookUriList.clear()
     }
 
-    fun setSelectedItem(folderInfo: FolderInfo){
+    fun setSelectedItem(folderInfo: FolderInfo) {
         _selectedFolderOption.postValue(folderInfo)
     }
 
 
-    override fun onCleared() {
-        super.onCleared()
-        firebaseRepository.removeFolderInfoEventListener()
-        Log.d(TAG, "onCleared: called")
-    }
+//    override fun onCleared() {
+//        super.onCleared()
+//        firebaseRepository.removeFolderInfoEventListener()
+//        Log.d(TAG, "onCleared: called")
+//    }
+//
 
     fun createFolder(folder_name: String): Task<Void>? {
         return firebaseRepository.createFolder(folder_name)

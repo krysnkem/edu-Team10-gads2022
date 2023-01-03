@@ -36,8 +36,12 @@ class PostBookInfoWorker(context: Context, workerParams: WorkerParameters) : Cor
         val size: Long = inputData.getLong(KEY_BOOK_SIZE, 0L)
         val dateAdded = inputData.getLong(KEY_DATE_ADDED, 0L)
         val downloadUrl = inputData.getString(KEY_BOOK_FILE_DOWNLOAD_URI)
-        val bookImageUrl  = inputData.getString(KEY_COVER_IMAGE_DOWNLOAD_URI)
+        val bookImageUrl = inputData.getString(KEY_COVER_IMAGE_DOWNLOAD_URI)
         val bookId = inputData.getString(KEY_BOOK_ID)
+
+        val notificationId = inputData.getInt(KEY_UNIQUE_NOTIFICATION_ID, NOTIFICATION_ID)
+
+
         if (user != null) {
             try {
                 val bookInfo = BookInfo(
@@ -53,32 +57,50 @@ class PostBookInfoWorker(context: Context, workerParams: WorkerParameters) : Cor
                 )
                 if (!bookInfo.isEmpty() && size != 0L && dateAdded != 0L) {
                     uploadBookDetails(bookInfo, user.uid).await()
-                    notificationManager.createNotification(BOOKSPACE_NOTIFICATION_TITLE,
-                    "Book Info Uploaded Successfully", applicationContext)
+//                    notificationManager.createNotification(
+//                        BOOKSPACE_NOTIFICATION_TITLE,
+//                        "Book Info Uploaded Successfully", applicationContext
+//                    )
+                    notificationManager.createUniqueNotification(
+                        BOOKSPACE_NOTIFICATION_TITLE,
+                        "Book Info Uploaded Successfully", applicationContext,
+                        notificationId
+                    )
+
                     return Result.success()
 
                 } else {
-                    notificationManager.createNotification(BOOKSPACE_NOTIFICATION_TITLE,
-                        "Failed to Upload Book Info", applicationContext)
+                    notificationManager.createUniqueNotification(
+                        BOOKSPACE_NOTIFICATION_TITLE,
+                        "Failed to Upload Book Info, Retrying..", applicationContext,
+                        notificationId
+                    )
+                    Result.retry()
                     return Result.failure()
                 }
 
 
             } catch (e: Exception) {
                 e.printStackTrace()
-                notificationManager.createNotification(BOOKSPACE_NOTIFICATION_TITLE,
-                    "Failed to Upload Book Info", applicationContext)
-                return  Result.failure()
+                notificationManager.createNotification(
+                    BOOKSPACE_NOTIFICATION_TITLE,
+                    "Failed to Upload Book Info", applicationContext
+                )
+                Result.retry()
+                return Result.failure()
             }
         }
-        notificationManager.createNotification(BOOKSPACE_NOTIFICATION_TITLE,
-            "Failed to Upload Book Info", applicationContext)
+        notificationManager.createNotification(
+            BOOKSPACE_NOTIFICATION_TITLE,
+            "Failed to Upload Book Info", applicationContext
+        )
+        Result.retry()
         return Result.failure()
 
 
     }
 
-    suspend fun uploadBookDetails(bookInfo: BookInfo, uid: String): Task<Void> {
+    private suspend fun uploadBookDetails(bookInfo: BookInfo, uid: String): Task<Void> {
 
         return withContext(Dispatchers.IO) {
             database.updateChildren(
@@ -86,7 +108,9 @@ class PostBookInfoWorker(context: Context, workerParams: WorkerParameters) : Cor
                     "folders/$uid/${bookInfo.folderId}/${bookInfo.bookId}" to bookInfo.toMap(),
                     "foldersInfo/${uid}/${bookInfo.folderId}/numberOfFiles" to ServerValue.increment(
                         1
-                    )
+                    ),
+                    "foldersInfo/${bookInfo.ownerId}/${bookInfo.folderId}/dateModified" to -1 * System.currentTimeMillis()
+
                 )
             )
         }

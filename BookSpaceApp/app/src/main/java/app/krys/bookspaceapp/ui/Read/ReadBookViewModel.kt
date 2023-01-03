@@ -21,8 +21,13 @@ class ReadBookViewModel(val application: Application) : ViewModel() {
             try {
                 val byteArray = firebaseRepository.downloadBookFile(bookInfo.downloadUrl!!)
                 _pdfBytes.postValue(byteArray!!)
-                writeByteArrayToFile(application.applicationContext, byteArray,  filename, bookInfo.folderId!!)
-            }catch (e: Exception){
+                writeByteArrayToFile(
+                    application.applicationContext,
+                    byteArray,
+                    filename,
+                    bookInfo.folderId!!
+                )
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
 
@@ -41,16 +46,29 @@ class ReadBookViewModel(val application: Application) : ViewModel() {
                             bookInfo.folderId!!
                         )!!
                     )
-                }else {
+                } else {
                     loadBytes(bookInfo)
                 }
 
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
 
         }
 
+    }
+
+    fun addBookToRecent(bookInfo: BookInfo) {
+        viewModelScope.launch {
+            try {
+
+                firebaseRepository.addBookToRecent(bookInfo)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+            }
+        }
     }
 }
 

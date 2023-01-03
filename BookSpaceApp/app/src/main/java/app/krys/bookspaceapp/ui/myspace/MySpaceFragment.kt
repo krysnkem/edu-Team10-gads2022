@@ -99,11 +99,18 @@ class MySpaceFragment : Fragment() {
                 findNavController().navigate(action)
             }
         )
+        folderAdapter.setCount()
         folderAdapter.dataChanged.observe(viewLifecycleOwner, Observer<Boolean>{
             hideLoadingOverlay()
         })
 
-
+        folderAdapter.itemCount.observe(viewLifecycleOwner) {
+            if (it < 1) {
+                showMessageText()
+            } else {
+                hideMessageText()
+            }
+        }
 
         binding.folderRv.adapter = folderAdapter
 
@@ -215,11 +222,20 @@ class MySpaceFragment : Fragment() {
                             hideLoadingOverlay()
                         }
                 }
-
+                folderAdapter.reduceCount()
 
             }
         }
     }
+
+    private fun hideMessageText() {
+        binding.messageTv.visibility = View.GONE
+    }
+
+    private fun showMessageText() {
+        binding.messageTv.visibility = View.VISIBLE
+    }
+
 
     override fun onStart() {
         super.onStart()

@@ -12,7 +12,8 @@
     <color name="reader_text_color">#FF757575</color>
     <color name="light_gray_900">#E1E3E5</color>
     <color name="colorBackgroundTin">#00000000</color>
-    <color name="major_text_color">@color/black</color>
-    <color name="splash_screen_color">@color/white</color>
-    <color name="option_icon_color">#979797</color>
+    <color name="major_text_color">@color/white</color>
+    <color name="splash_screen_color">@color/black</color>
+    <color name="option_icon_color">@color/white</color>
+
 </resources>

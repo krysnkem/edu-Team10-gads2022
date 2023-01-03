@@ -13,12 +13,13 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 
 
-class ReadPdfMetadata internal constructor(val data: Uri, val context: Context) {
+class ReadPdfMetadata internal constructor(val context: Context) {
+
 
     private var core: PdfiumCore = PdfiumCore(context)
 
     @Throws(IOException::class)
-    suspend fun getPdfMetadata(): BookMetaData {
+    suspend fun getPdfMetadata(data: Uri): BookMetaData {
 
         return withContext(Dispatchers.IO) {
             val document = core.newDocument(context.contentResolver.openFileDescriptor(data, "r"))
@@ -38,15 +39,27 @@ class ReadPdfMetadata internal constructor(val data: Uri, val context: Context) 
             BookMetaData(
                 author = md.author,
                 title = md.title,
-                size = getFileSize(),
-                fileName = getFileName(),
-                frontPage = getFirstPageBitmap()
+                size = getFileSize(data),
+                fileName = getFileName(data),
+                frontPage = getFirstPageBitmap(data),
+                uri = data
             )
         }
 
     }
+    suspend fun getMetaDataList( dataList: List<Uri>): List<BookMetaData>{
+            val metaDataList = mutableListOf<BookMetaData>()
+            dataList.forEach { uri ->
+                metaDataList.add(
+                    getPdfMetadata(uri)
+                )
 
-   private fun getFileName(): String? {
+            }
+          return  metaDataList
+
+    }
+
+   private fun getFileName(data: Uri): String? {
         var result: String? = null
         if (data.scheme == "content") {
             val cursor: Cursor? = context.contentResolver.query(data, null, null, null, null)
@@ -67,7 +80,7 @@ class ReadPdfMetadata internal constructor(val data: Uri, val context: Context) 
         return result
     }
 
-   private fun getFileSize(): Long? {
+   private fun getFileSize(data: Uri): Long? {
         var result: Long? = null
         if (data.scheme == "content") {
             val cursor: Cursor? = context.contentResolver.query(data, null, null, null, null)
@@ -83,7 +96,7 @@ class ReadPdfMetadata internal constructor(val data: Uri, val context: Context) 
         return result
     }
 
-    private suspend fun getFirstPageBitmap(): Bitmap? {
+    private fun getFirstPageBitmap(data: Uri): Bitmap? {
         val pageNum = 0
         try {
             val pdfDocument: PdfDocument =
@@ -109,8 +122,9 @@ class ReadPdfMetadata internal constructor(val data: Uri, val context: Context) 
             return bitmap
         } catch (ex: IOException) {
             ex.printStackTrace()
+            return null
         }
-        return null
+
     }
 
 

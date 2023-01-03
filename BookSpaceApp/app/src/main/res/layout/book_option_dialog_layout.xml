@@ -19,15 +19,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Read"
-            android:fontFamily="@font/comfortaa"
-            android:textColor="@color/black"
             android:layout_marginEnd="10dp"
-            android:textSize="16sp"/>
+            style="@style/upload_book_text_style"
+            />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_read_book"
-            android:contentDescription="@string/about" />
+            android:contentDescription="@string/about"
+            app:tint="@color/major_text_color" />
 
     </LinearLayout>
 
@@ -47,14 +47,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/about"
-            android:fontFamily="@font/comfortaa"
-            android:textColor="@color/black"
             android:layout_marginEnd="10dp"
-            android:textSize="16sp"/>
+            style="@style/upload_book_text_style"
+            />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_about"
+            app:tint="@color/major_text_color"
             android:contentDescription="@string/about" />
 
     </LinearLayout>
@@ -74,14 +74,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/remove"
-            android:fontFamily="@font/comfortaa"
-            android:textColor="@color/black"
             android:layout_marginEnd="10dp"
-            android:textSize="16sp"/>
+            style="@style/upload_book_text_style"
+            />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_delete"
+            app:tint="@color/major_text_color"
             android:contentDescription="@string/remove" />
 
     </LinearLayout>

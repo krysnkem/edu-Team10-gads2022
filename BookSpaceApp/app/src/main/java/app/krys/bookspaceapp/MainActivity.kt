@@ -37,6 +37,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.nostra13.universalimageloader.core.ImageLoader
 import de.hdodenhof.circleimageview.CircleImageView
 
 
@@ -79,7 +80,7 @@ class MainActivity : AppCompatActivity(), IUser {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_account_settings
+                R.id.nav_home, R.id.nav_account_settings
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -105,13 +106,13 @@ class MainActivity : AppCompatActivity(), IUser {
             val name = navHeader.findViewById<TextView>(R.id.user_name)
             val email = navHeader.findViewById<TextView>(R.id.email)
             val profileImage = navHeader.findViewById<CircleImageView>(R.id.profile_image)
-//            val imageLoader = ImageLoader.getInstance()
+            val imageLoader = ImageLoader.getInstance()
 
             // Get user data for nav header
             userDataViewModel.userData.observe(this) { user ->
                 name.text = user?.name
                 email.text = user?.email
-//                imageLoader.displayImage(user?.profile_image, profileImage)
+                imageLoader.displayImage(user?.profile_image, profileImage)
             }
 
             // On click, display AccountSettingsFragment
@@ -242,47 +243,51 @@ class MainActivity : AppCompatActivity(), IUser {
 
             val db = FirebaseDatabase.getInstance().reference
             val user = auth.currentUser
-            getSignInProvider(user!!)
-            Log.d(TAG, "Method 111111111111: Get User Data: ${user.providerData}")
-            viewModel.signInProvider.observe(this) { signInProvider ->
-                if (signInProvider) {
-                    var userData: User? = null
-                    /** Query Method 1 */
-                    /**val query2: Query = db.child(getString(R.string.db_node_users))
-                    .orderByChild(getString(R.string.field_user_id))
-                    .equalTo(user!!.uid)*/
 
-                    /** Query Method 1 */
-                    val query1: Query = db.child(getString(R.string.db_node_users))
-                        .orderByKey()// .orderByValue() for a field value such as 'string'
-                        .equalTo(user.uid)
+            if (user != null) {
+                getSignInProvider(user)
+                Log.d(TAG, "Method 111111111111: Get User Data: ${user.providerData}")
+                viewModel.signInProvider.observe(this) { signInProvider ->
+                    if (signInProvider) {
+                        var userData: User? = null
+                        /** Query Method 1 */
+                        /**val query2: Query = db.child(getString(R.string.db_node_users))
+                        .orderByChild(getString(R.string.field_user_id))
+                        .equalTo(user!!.uid)*/
 
-                    query1.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
+                        /** Query Method 1 */
+                        val query1: Query = db.child(getString(R.string.db_node_users))
+                            .orderByKey()// .orderByValue() for a field value such as 'string'
+                            .equalTo(user.uid)
 
-                            for (singleSnapshot: DataSnapshot in snapshot.children) {
-                                userData = singleSnapshot.getValue<User>()
-                                Log.d(TAG, "Method 1: Get User Data: ${userData.toString()}")
+                        query1.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+
+                                for (singleSnapshot: DataSnapshot in snapshot.children) {
+                                    userData = singleSnapshot.getValue<User>()
+                                    Log.d(TAG, "Method 1: Get User Data: ${userData.toString()}")
+                                }
+                                // Get user data and send the data to observe
+                                userDataViewModel.getUserData(userData)
                             }
-                            // Get user data and send the data to observe
-                            userDataViewModel.getUserData(userData)
-                        }
 
-                        override fun onCancelled(error: DatabaseError) {
-                            Log.e(TAG, "ERROR FROM DB: ${error.details}")
-                        }
-                    })
+                            override fun onCancelled(error: DatabaseError) {
+                                Log.e(TAG, "ERROR FROM DB: ${error.details}")
+                            }
+                        })
 
-                } else {
-                    // Get user data and send the data to observe
-                    val userData = User(
-                        name = user.displayName,
-                        profile_image = user.photoUrl.toString(),
-                        email = user.email
-                    )
-                    userDataViewModel.getUserData(userData)
+                    } else {
+                        // Get user data and send the data to observe
+                        val userData = User(
+                            name = user.displayName,
+                            profile_image = user.photoUrl.toString(),
+                            email = user.email
+                        )
+                        userDataViewModel.getUserData(userData)
+                    }
                 }
             }
+
 
 
         }
@@ -291,7 +296,7 @@ class MainActivity : AppCompatActivity(), IUser {
             // TODO: Step 1.6 START create a channel
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val downloadNotificationChannel =
-                    NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+                    NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_LOW)
                         .apply {
                             enableLights(true)
                             lightColor = ContextCompat.getColor(

@@ -4,7 +4,6 @@ import android.os.Parcelable
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
 import kotlinx.parcelize.Parcelize
@@ -21,7 +20,9 @@ data class BookInfo(
     var dateAdded: Long? = null,
     var downloadUrl: String? = null,
     var bookImageUrl: String? = null,
-    var bookId: String? = null
+    var bookId: String? = null,
+    var lastRead: Long? = 0,
+    var currentPage: Long? = 0
 ) : Parcelable {
     companion object {
         @BindingAdapter("bookImage")
@@ -45,6 +46,8 @@ data class BookInfo(
             "downloadUrl" to downloadUrl!!,
             "bookImageUrl" to bookImageUrl!!,
             "bookId" to bookId!!,
+            "lastRead" to lastRead!!,
+            "currentPage" to currentPage!!
         )
     }
 
@@ -58,8 +61,11 @@ data class BookInfo(
                         dateAdded == null &&
                         downloadUrl == null &&
                         bookImageUrl == null &&
-                        bookId == null
+                        bookId == null &&
+                        lastRead == null &&
+                        currentPage == null
                 )
     }
+
 
 }

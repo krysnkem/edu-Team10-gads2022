@@ -3,7 +3,8 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <data>
         <variable
@@ -11,81 +12,93 @@
             type="app.krys.bookspaceapp.data.model.BookMetaData" />
          />
     </data>
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_view"
-        android:layout_width="120dp"
-        android:layout_height="190dp"
-        android:elevation="6dp"
-        app:strokeColor="@color/light_gray_900"
-        app:strokeWidth="0.9dp"
-        app:cardCornerRadius="4dp"
-        android:visibility="gone">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_view"
+            android:layout_width="120dp"
+            android:layout_height="190dp"
+            android:elevation="6dp"
+            app:cardCornerRadius="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@color/light_gray_900"
+            app:strokeWidth="0.9dp">
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:id="@+id/book_imageV"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="136dp"
-                android:contentDescription="@string/book_image"
-                app:bitmap="@{bookData.frontPage}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/placeholder_book_img" />
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true">
 
-            <TextView
-                android:id="@+id/book_name_tv"
-                android:layout_width="97dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/roboto_bold"
-                android:maxLines="1"
-                android:ellipsize="end"
-                tools:text="@string/placeholder_book_name_text"
-                android:textColor="@color/black"
-                tools:textSize="13sp"
-                app:title="@{bookData.title}"
-                app:fileName="@{bookData.fileName}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/book_imageV" />
+                <ImageView
+                    android:id="@+id/book_imageV"
+                    android:layout_width="match_parent"
+                    android:layout_height="136dp"
+                    android:contentDescription="@string/book_image"
+                    app:bitmap="@{bookData.frontPage}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/placeholder_book_img" />
 
-            <TextView
-                android:id="@+id/book_author_tv"
-                android:layout_width="97dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:fontFamily="@font/roboto"
-                android:maxLines="1"
-                tools:text="@string/placeholder_author_text"
-                app:author="@{bookData.author}"
-                android:textColor="@color/blue_accent"
-                android:textSize="11sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/book_name_tv" />
+                <TextView
+                    android:id="@+id/book_name_tv"
+                    android:layout_width="97dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="10dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_bold"
+                    android:maxLines="1"
+                    android:textColor="@color/major_text_color"
+                    app:fileName="@{bookData.fileName}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/book_imageV"
+                    app:title="@{bookData.title}"
+                    tools:text="@string/placeholder_book_name_text"
+                    tools:textSize="13sp" />
 
-            <TextView
-                android:id="@+id/item_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="7dp"
-                android:layout_marginBottom="7dp"
-                android:fontFamily="@font/comfortaa"
-                android:text="@string/pdf"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                <TextView
+                    android:id="@+id/book_author_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:fontFamily="@font/roboto"
+                    android:maxLines="1"
+                    android:textColor="@color/blue_accent"
+                    android:textSize="11sp"
+                    app:author="@{bookData.author}"
+                    app:layout_constraintEnd_toStartOf="@+id/item_type"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/book_name_tv"
+                    tools:text="@string/placeholder_author_text" />
+
+                <TextView
+                    android:id="@+id/item_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="7dp"
+                    android:layout_marginBottom="7dp"
+                    android:fontFamily="@font/comfortaa"
+                    android:text="@string/pdf"
+                    android:textColor="@color/major_text_color"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
 

@@ -14,7 +14,8 @@ class MySpaceViewModel(val application: Application) : ViewModel() {
 
 
     private val firebaseRepository = FirebaseRepository()
-    val options = firebaseRepository.folderInfoOptions
+    val options = firebaseRepository.getFolderInfosOption()
+
 
 
     fun createFolder(folder_name: String): Task<Void>? {

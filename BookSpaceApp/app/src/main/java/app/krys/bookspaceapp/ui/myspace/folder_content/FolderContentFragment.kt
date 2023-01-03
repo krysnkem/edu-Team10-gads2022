@@ -51,11 +51,29 @@ class FolderContentFragment : Fragment() {
             OnSelectBookOptionListener { bookInfo ->
                 bookOptionDialog.show()
                 setUpDialogMethods(bookInfo)
-            })
+            }
+       )
+        bookAdapter.setCount()
         binding.folderContentRv.adapter = bookAdapter
         bookAdapter.dataChanged.observe(viewLifecycleOwner) {
             hideLoading()
         }
+        bookAdapter.itemCount.observe(viewLifecycleOwner){count->
+            if (count  < 1){
+                showMessageText()
+            }else{
+                hideMessageText()
+            }
+
+        }
+    }
+
+    private fun hideMessageText() {
+        binding.messageTv.visibility = View.GONE
+    }
+
+    private fun showMessageText() {
+        binding.messageTv.visibility = View.VISIBLE
     }
 
     private fun setUpDialogMethods(bookInfo: BookInfo) {
@@ -66,6 +84,11 @@ class FolderContentFragment : Fragment() {
                     bookInfo
                 )
             findNavController().navigate(action)
+        }
+        bookOptionBinding.removeOption.setOnClickListener {
+            viewModel.removeBook(bookInfo)
+            bookOptionDialog.dismiss()
+            bookAdapter.reduceCount()
         }
 
     }

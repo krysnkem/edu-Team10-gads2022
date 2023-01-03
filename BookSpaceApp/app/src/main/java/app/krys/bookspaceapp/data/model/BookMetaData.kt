@@ -1,6 +1,7 @@
 package app.krys.bookspaceapp.data.model
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.text.TextUtils
 import android.widget.ImageView
 import android.widget.TextView
@@ -12,7 +13,8 @@ data class BookMetaData(
     var title: String? = null,
     var size: Long? = null,
     var fileName: String? = null,
-    var frontPage: Bitmap? = null
+    var frontPage: Bitmap? = null,
+    var uri: Uri? = null
 ) {
 
     companion object {

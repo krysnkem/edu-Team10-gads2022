@@ -106,8 +106,12 @@ dependencies {
     implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
 
 
-    // Kotlin + coroutines
+    // Kotlin work manager + coroutines
     implementation "androidx.work:work-runtime-ktx:$work_version"
+
+    //splash screen api
+    implementation 'androidx.core:core-splashscreen:1.0.0'
+
 
 
 }

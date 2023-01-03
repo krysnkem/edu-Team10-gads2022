@@ -66,7 +66,7 @@
                     android:fontFamily="@font/roboto_bold"
                     android:maxLines="1"
                     android:text="@{book.bookName}"
-                    android:textColor="@color/black"
+                    android:textColor="@color/major_text_color"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/book_imageV"
                     tools:text="@string/placeholder_book_name_text"
@@ -79,7 +79,7 @@
                     android:layout_marginStart="5dp"
                     android:fontFamily="@font/roboto"
                     android:maxLines="1"
-                    android:text="@{book.author}"
+                    app:author="@{book.author}"
                     android:textColor="@color/blue_accent"
                     android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -94,7 +94,7 @@
                     android:layout_marginBottom="7dp"
                     android:fontFamily="@font/comfortaa"
                     android:text="@string/pdf"
-                    android:textColor="@color/black"
+                    android:textColor="@color/major_text_color"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 

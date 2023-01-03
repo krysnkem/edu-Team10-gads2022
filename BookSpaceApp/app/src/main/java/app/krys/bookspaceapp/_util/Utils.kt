@@ -139,6 +139,22 @@ fun deleteFolderCachedFiles(applicationContext: Context, folderId: String): Bool
     return fileDir.deleteRecursively()
 }
 
+fun deleteBookFromCache(applicationContext: Context, folderId: String, name: String): Boolean{
+    val outputDir = File(applicationContext.filesDir, OUTPUT_PATH)
+    if (!outputDir.exists()) {
+        return true
+    }
+    val fileDir = File(outputDir, folderId)
+    if (!fileDir.exists()) {
+        return true
+    }
+    val outputFile = File(fileDir, name)
+    if (!outputFile.exists()) {
+        return true
+    }
+    return outputFile.delete()
+}
+
 //deletes all files
 fun clearAllCachedFiles(applicationContext: Context) {
     val outputPath = File(applicationContext.filesDir, OUTPUT_PATH)
@@ -158,12 +174,16 @@ fun clearAllCachedFiles(applicationContext: Context) {
  * @return True if file exists and false if file or directory does not exist
  */
 @Throws(FileNotFoundException::class)
-suspend fun pdfFileExists(applicationContext: Context, name: String, folderId: String): Boolean {
-    val outputDir = File(applicationContext.filesDir, folderId)
+ fun pdfFileExists(applicationContext: Context, name: String, folderId: String): Boolean {
+    val outputDir = File(applicationContext.filesDir, OUTPUT_PATH)
     if (!outputDir.exists()) {
         return false// should succeed
     }
-    return File(outputDir, name).exists()
+    val fileDir = File(outputDir, folderId)
+    if (!fileDir.exists()) {
+        return false
+    }
+    return File(fileDir, name).exists()
 
 }
 

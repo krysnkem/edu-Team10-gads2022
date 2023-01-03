@@ -15,7 +15,7 @@
         android:paddingTop="10dp"
         android:text="@string/folder"
         app:layout_constraintStart_toStartOf="@+id/guidelie_left"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+        app:layout_constraintTop_toBottomOf="@+id/select_btn" />
 
     <Spinner
         android:id="@+id/spinner"
@@ -73,7 +73,7 @@
         android:layout_marginTop="84dp"
         app:layout_constraintStart_toStartOf="@+id/guidelie_left"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="TextView" />
+        android:text="Click Here to Select Books" />
 
     <Button
         android:id="@+id/select_btn"
@@ -83,53 +83,43 @@
         android:backgroundTint="@color/white"
         android:text="@string/select"
         android:textColor="@color/blue_accent"
-        app:layout_constraintBottom_toBottomOf="@+id/view2"
+        app:layout_constraintBottom_toBottomOf="@+id/book_name_tv"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
         app:strokeColor="@color/blue_accent"
         app:strokeWidth="1dp" />
 
-    <View
-        android:id="@+id/view2"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="12dp"
-        android:background="@drawable/black_rectangle"
-        app:layout_constraintEnd_toStartOf="@id/select_btn"
-        app:layout_constraintStart_toStartOf="@id/book_name_tv"
-        app:layout_constraintTop_toBottomOf="@id/book_name_tv" />
+    <!--    <include-->
+<!--        android:id="@+id/view_book_layout"-->
+<!--        layout="@layout/view_book_layout"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/book_cover"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/book_cover"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/book_cover"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/book_cover" />-->
 
-    <include
-        android:id="@+id/view_book_layout"
-        layout="@layout/view_book_layout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/book_cover"
-        app:layout_constraintEnd_toEndOf="@+id/book_cover"
-        app:layout_constraintStart_toStartOf="@+id/book_cover"
-        app:layout_constraintTop_toTopOf="@+id/book_cover" />
-
-    <View
-        android:id="@+id/book_cover"
-        android:layout_width="140dp"
-        android:layout_height="206dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/upload_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+<!--    <View-->
+<!--        android:id="@+id/book_cover"-->
+<!--        android:layout_width="140dp"-->
+<!--        android:layout_height="206dp"-->
+<!--        android:visibility="invisible"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/upload_btn"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.498"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/view" />-->
 
     <Button
         android:id="@+id/upload_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/upload"
         android:enabled="false"
+        android:text="@string/upload"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/book_cover" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner"
+        app:layout_constraintVertical_bias="0.847" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/progress_overlay"
@@ -162,6 +152,18 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/books_Rv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layoutManager=".layoutmanagers.HorizontalLayoutManagerWrapper"
+        app:layout_constraintBottom_toTopOf="@+id/upload_btn"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toStartOf="@+id/guidelie_left"
+
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        tools:listitem="@layout/view_book_layout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,6 +36,9 @@ class UploadBookFileWorker(context: Context, workerParams: WorkerParameters) : C
 
         val bookName = inputData.getString(KEY_BOOK_NAME)
 
+        val notificationId = inputData.getInt(KEY_UNIQUE_NOTIFICATION_ID, NOTIFICATION_ID)
+
+
         return try {
 
             //check that the uri input is not null
@@ -55,7 +58,8 @@ class UploadBookFileWorker(context: Context, workerParams: WorkerParameters) : C
                     bookUri = Uri.parse(bookFileUri),
                     uid = user.uid,
                     bookKey = bookKey!!,
-                    bookName
+                    bookName,
+                    notificationId
 
                 )
             }
@@ -75,15 +79,22 @@ class UploadBookFileWorker(context: Context, workerParams: WorkerParameters) : C
         bookUri: Uri,
         uid: String,
         bookKey: String,
-        bookName: String?
+        bookName: String?,
+        notificationId: Int
     ): Result {
 
         val fileRef = storage.child("folderFiles/$uid/$folderId/$bookKey.pdf")
 
         fileRef.putFile(bookUri).addOnProgressListener {
-            notificationManager?.createProgressiveNotification(
+//            notificationManager?.createProgressiveNotification(
+//                "Uploading $bookName",
+//                ((100 * it.bytesTransferred) / it.totalByteCount).toInt(), applicationContext
+//            )
+            notificationManager?.createUniqueProgressiveNotification(
                 "Uploading $bookName",
-                ((100 * it.bytesTransferred) / it.totalByteCount).toInt(), applicationContext
+                ((100 * it.bytesTransferred) / it.totalByteCount).toInt(),
+                applicationContext,
+                notificationId
             )
         }.await()
 

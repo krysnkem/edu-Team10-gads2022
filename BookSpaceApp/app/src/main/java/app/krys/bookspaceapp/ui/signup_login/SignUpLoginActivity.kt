@@ -3,8 +3,11 @@ package app.krys.bookspaceapp.ui.signup_login
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import app.krys.bookspaceapp.MainActivity
@@ -18,6 +21,7 @@ import com.nostra13.universalimageloader.core.ImageLoader
 class SignUpLoginActivity : AppCompatActivity(), IItems {
 
     private lateinit var binding: ActivitySignUpLoginBinding
+
     /** Email verification and Reset Password dialogs */
     private var resendEmailVerificationDialog: ResendEmailVerificationDialog? = null
     private var sendEmailResetPasswordLinkDialog: ResetPasswordDialogFragment? = null
@@ -28,17 +32,26 @@ class SignUpLoginActivity : AppCompatActivity(), IItems {
 
     private var activeStateFlag = false
 
+    private val TIMEOUT = 3000L
+    private var keepOn = true
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val splashScreen = installSplashScreen()
         binding = ActivitySignUpLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        splashScreen.setKeepOnScreenCondition {
+            Handler(Looper.getMainLooper()).postDelayed({
+                keepOn = false
+            }, TIMEOUT)
+            keepOn
+        }
         /** Initialize resend Email Verification Dialog */
-        if (resendEmailVerificationDialog == null )
+        if (resendEmailVerificationDialog == null)
             resendEmailVerificationDialog = ResendEmailVerificationDialog()
 
-        if (sendEmailResetPasswordLinkDialog == null )
+        if (sendEmailResetPasswordLinkDialog == null)
             sendEmailResetPasswordLinkDialog = ResetPasswordDialogFragment()
 
         inflateLoginFragment()
@@ -70,7 +83,6 @@ class SignUpLoginActivity : AppCompatActivity(), IItems {
         val imageLoader = UniversalImageLoader(this)
         ImageLoader.getInstance().init(imageLoader.getConfig())
     }
-
 
 
     /** Login and SignUp Fragments management */
@@ -138,7 +150,6 @@ class SignUpLoginActivity : AppCompatActivity(), IItems {
     }
 
 
-
     override fun onBackPressed() {
         super.onBackPressed()
         if (activeStateFlag) {
@@ -149,7 +160,6 @@ class SignUpLoginActivity : AppCompatActivity(), IItems {
             exitAppFromLoginScreen()
         }
     }
-
 
 
     companion object {

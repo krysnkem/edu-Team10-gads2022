@@ -11,6 +11,9 @@ const val DOWNLOAD_NOTIFICATION_CHANNEL_ID = "download_notification_channel_id"
 const val DOWNLOAD_NOTIFICATION_CHANNEL_NAME = "Download Channel"
 const val NOTIFICATION_ID = 3
 const val BOOKSPACE_NOTIFICATION_TITLE =  "Book Space"
+const val KEY_UNIQUE_NOTIFICATION_ID = "unique_download_notification_key"
+
+
 const val OUTPUT_PATH = "file_outputs"
 const val PDF_CACHE_DIR = "pdf_cache_dir"
 
@@ -27,5 +30,6 @@ const val KEY_AUTHOR: String = "book_author"
 const val KEY_BOOK_SIZE: String = "book_size"
 const val KEY_DATE_ADDED: String = "book_date_added"
 const val KEY_BOOK_ID: String = "book_id"
+
 
 const val PDF_MAX_BYTES = 50000000L  //50Mb

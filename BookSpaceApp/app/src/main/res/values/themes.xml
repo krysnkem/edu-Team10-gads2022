@@ -12,6 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <!-- Customize your theme here. -->
+
     </style>
 
     <style name="Theme.BookSpaceApp.NoActionBar">
@@ -19,9 +20,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+
     <style name="Theme.BookSpaceApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.BookSpaceApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.BookSpaceApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
+        <item name="android:textColor">@color/major_text_color</item>
+    </style>
 
     <style name="Widget.App.TabLayout" parent="Widget.MaterialComponents.TabLayout">
         <item name="tabTextAppearance">@style/TextAppearance.App.Button</item>

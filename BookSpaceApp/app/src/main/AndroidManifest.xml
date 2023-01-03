@@ -24,7 +24,8 @@
         tools:targetApi="33">
         <activity
             android:name=".ui.signup_login.SignUpLoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

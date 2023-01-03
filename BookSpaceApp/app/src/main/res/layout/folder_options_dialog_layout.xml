@@ -20,15 +20,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/about"
-            android:fontFamily="@font/comfortaa"
-            android:textColor="@color/black"
+            style="@style/upload_book_text_style"
             android:layout_marginEnd="10dp"
-            android:textSize="16sp"/>
+            />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_about"
-            android:contentDescription="@string/about" />
+            android:contentDescription="@string/about"
+            app:tint="@color/major_text_color" />
 
     </LinearLayout>
     <LinearLayout
@@ -47,15 +47,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/remove"
-            android:fontFamily="@font/comfortaa"
-            android:textColor="@color/black"
+            style="@style/upload_book_text_style"
             android:layout_marginEnd="10dp"
-            android:textSize="16sp"/>
+            />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_delete"
-            android:contentDescription="@string/remove" />
+            android:contentDescription="@string/remove"
+            app:tint="@color/major_text_color" />
 
     </LinearLayout>
 

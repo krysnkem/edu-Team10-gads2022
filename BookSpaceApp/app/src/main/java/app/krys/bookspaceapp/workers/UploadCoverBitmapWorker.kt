@@ -30,14 +30,21 @@ class UploadCoverBitmapWorker(context: Context, workerParams: WorkerParameters) 
         val coverImageUri = inputData.getString(COVER_IMAGE_URI)
         val folderId = inputData.getString(KEY_FOLDER_ID)
         val bookName = inputData.getString(KEY_BOOK_NAME)
+        val notificationId = inputData.getInt(KEY_UNIQUE_NOTIFICATION_ID, NOTIFICATION_ID)
+
         val notificationManager = ContextCompat.getSystemService(
             applicationContext,
             NotificationManager::class.java
         ) as NotificationManager
         return try {
-            notificationManager.createIndeterminateNotification(
+//            notificationManager.createIndeterminateNotification(
+//                "Preparing $bookName",
+//                applicationContext
+//            )
+            notificationManager.createUniqueIndeterminateNotification(
                 "Preparing $bookName",
-                applicationContext
+                applicationContext,
+                notificationId
             )
 
             if (TextUtils.isEmpty(coverImageUri) && TextUtils.isEmpty(folderId)) {

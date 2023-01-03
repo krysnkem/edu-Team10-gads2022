@@ -77,7 +77,7 @@
                     android:fontFamily="@font/roboto_bold"
                     android:maxLines="1"
                     android:text="@{folder.folderName}"
-                    android:textColor="@color/black"
+                    android:textColor="@color/major_text_color"
                     app:layout_constraintBottom_toTopOf="@+id/textView4"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/folder_imageV"
@@ -122,7 +122,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/folder_imageV"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_more" />
+                    app:srcCompat="@drawable/ic_more"
+                    app:tint="@color/option_icon_color" />
 
 
 
