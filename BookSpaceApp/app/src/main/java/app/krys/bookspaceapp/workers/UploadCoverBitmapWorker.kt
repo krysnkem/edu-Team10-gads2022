@@ -73,11 +73,12 @@ class UploadCoverBitmapWorker(context: Context, workerParams: WorkerParameters) 
 
     }
 
-    suspend fun uploadCoverImageToFirebaseStorage(
+    private suspend fun uploadCoverImageToFirebaseStorage(
         folderId: String,
         coverImage: Uri,
         uid: String, bookKey: String
     ): Result {
+        //TODO: change path to "folderFiles/$uid/$bookKey.png"
 
         val imageRef = storage.child("folderFiles/$uid/$folderId/$bookKey.png")
 

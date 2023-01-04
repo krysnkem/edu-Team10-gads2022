@@ -159,7 +159,8 @@ class MainActivity : AppCompatActivity(), IUser {
                 true
             }
             // Uses menu item to navigate to AccountSettingsFragment or LogoutDialogFragment
-            else -> item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)}
+            else -> item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
+        }
     }
 
 

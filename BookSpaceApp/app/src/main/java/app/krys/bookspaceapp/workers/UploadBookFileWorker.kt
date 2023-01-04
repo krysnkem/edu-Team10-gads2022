@@ -82,7 +82,7 @@ class UploadBookFileWorker(context: Context, workerParams: WorkerParameters) : C
         bookName: String?,
         notificationId: Int
     ): Result {
-
+        //TODO: change path to "folderFiles/$uid/$bookKey.pdf"
         val fileRef = storage.child("folderFiles/$uid/$folderId/$bookKey.pdf")
 
         fileRef.putFile(bookUri).addOnProgressListener {

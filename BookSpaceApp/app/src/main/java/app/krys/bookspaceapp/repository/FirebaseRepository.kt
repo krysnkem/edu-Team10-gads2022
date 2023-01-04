@@ -298,8 +298,11 @@ class FirebaseRepository {
                 "foldersInfo/${bookInfo.ownerId}/${bookInfo.folderId}/dateModified" to -1 * System.currentTimeMillis()
             )
         ).await()
+
+        //TODO: change child path to "folderFiles/${bookInfo.ownerId}/${bookInfo.bookId}.pdf"
         storage.child("folderFiles/${bookInfo.ownerId}/${bookInfo.folderId}/${bookInfo.bookId}.pdf")
             .delete().await()
+        //TODO: change child path to "folderFiles/${bookInfo.ownerId}/${bookInfo.bookId}.png"
         return storage.child("folderFiles/${bookInfo.ownerId}/${bookInfo.folderId}/${bookInfo.bookId}.png")
             .delete()
     }
