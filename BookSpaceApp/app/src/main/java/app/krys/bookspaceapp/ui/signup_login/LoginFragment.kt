@@ -220,7 +220,7 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
             R.id.login_button -> signIn()
             R.id.resend_email_button -> emailNotVerified()
             R.id.facebook_button -> facebookSignProvider() // snackBar(requireView(), "Coming Soon!")
-            R.id.twitter_button -> snackBar(requireView(), "Coming Soon!")
+            R.id.twitter_button -> twitterSignProvider() // snackBar(requireView(), "Coming Soon!")
             R.id.google_button -> googleSignProvider()
         }
     }

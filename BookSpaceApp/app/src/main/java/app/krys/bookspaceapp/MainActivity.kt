@@ -7,6 +7,8 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -46,6 +48,8 @@ class MainActivity : AppCompatActivity(), IUser {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navController: NavController
+    private var menuItemAccountSetting: MenuItem? = null
+
 
     private lateinit var binding: ActivityMainBinding
 
@@ -90,7 +94,6 @@ class MainActivity : AppCompatActivity(), IUser {
 
         /** Manages nav header section  */
         navHeaderManager(navView)
-
     }
 
 
@@ -116,17 +119,13 @@ class MainActivity : AppCompatActivity(), IUser {
 
             // On click, display AccountSettingsFragment
             editProfileButton.setOnClickListener {
-                navController.currentDestination?.let {
-                    if (it.id != R.id.nav_account_settings) { // No navigation if it's the current destination
-                        Navigation.findNavController(this, R.id.nav_host_fragment_content_main)
-                            .navigate(R.id.nav_account_settings)
-                    }
-                }
+                menuItemAccountSetting?.let { item -> onOptionsItemSelected(item) }
                 drawerLayout.closeDrawer(GravityCompat.START)
             }
         }
 
     }
+
 
 
 
@@ -335,6 +334,7 @@ class MainActivity : AppCompatActivity(), IUser {
 
             val menuItemLogin: MenuItem? = menu?.findItem(R.id.option_login)
             val menuItemLogout: MenuItem? = menu?.findItem(R.id.nav_logout)
+            menuItemAccountSetting = menu?.findItem(R.id.nav_account_settings)
 
             when (authenticationState) {
                 LoginViewModel.AuthenticationState.AUTHENTICATED -> {

@@ -19,8 +19,6 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 
 open class BaseFragment : DialogFragment() {
@@ -118,7 +116,7 @@ open class BaseFragment : DialogFragment() {
                     .setFacebookButtonId(R.id.facebook_button)
                     .build()
             }
-            R.layout.fragment_login -> {
+            R.id.twitter_button -> {
                 AuthMethodPickerLayout
                     .Builder(R.layout.fragment_login)
                     .setTwitterButtonId(R.id.twitter_button)
@@ -152,25 +150,27 @@ open class BaseFragment : DialogFragment() {
 
         } else { // Failure: response.getError().getErrorCode() and handle error.
             // throw Exception("Error: ${response?.error?.errorCode}")
-            // Sign in failed
-            this.signOut()
-
             if (response == null) {
                 // User pressed back button
                 snackBar(requireView(),"Action Cancelled!")
+                this.signOut()
                 return
             }
 
-            if (response.error?.errorCode == ErrorCodes.NO_NETWORK) {
+            if (response.error!!.errorCode == ErrorCodes.NO_NETWORK) {
                 snackBar(requireView(),"No Internet Connection!!")
+                this.signOut()
                 return
             }
 
-            if (response.error?.message == EMAIL_TAKEN) {
+            if (response.error!!.errorCode == ErrorCodes.DEVELOPER_ERROR
+                || response.error!!.errorCode == EMAIL_TAKEN_ERROR_CODE) {
                 snackBar(requireView(),"This Email Address has been used.")
+                this.signOut()
+                return
             }
             snackBar(requireView(),"Unknown Error Occurred")
-            //Log.d(TAG, "Unknown Error Occurred: ${response.error}")
+            // Log.d(TAG, "Unknown Error Occurred: ${response.error?.errorCode}")
         }
     }
 
@@ -211,9 +211,11 @@ open class BaseFragment : DialogFragment() {
     }
 
 
-    fun validateForm(email: TextInputEditText,
-                     password: TextInputEditText,
-                     confirmPassword: TextInputEditText? = null): Boolean {
+    fun validateForm(
+        email: TextInputEditText,
+        password: TextInputEditText,
+        confirmPassword: TextInputEditText? = null,
+    ): Boolean {
 
         var valid = true
 
@@ -244,7 +246,7 @@ open class BaseFragment : DialogFragment() {
     }
 
     companion object {
-        const val EMAIL_TAKEN = "Developer error"
+        const val EMAIL_TAKEN_ERROR_CODE = 3
     }
 
 }

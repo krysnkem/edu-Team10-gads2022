@@ -197,7 +197,7 @@ class SignupFragment : BaseFragment(), View.OnClickListener  {
             R.id.register_button -> createAccount()
             R.id.forgot_password_button -> iItems!!.sendEmailResetPasswordLink(requireActivity())
             R.id.facebook_button -> facebookSignProvider() // snackBar(requireView(), "Coming Soon!")
-            R.id.twitter_button -> snackBar(requireView(), "Coming Soon!")
+            R.id.twitter_button -> twitterSignProvider() //snackBar(requireView(), "Coming Soon!")
             R.id.google_button -> googleSignProvider()
         }
     }
