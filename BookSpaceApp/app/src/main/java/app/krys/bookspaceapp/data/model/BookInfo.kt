@@ -2,7 +2,9 @@ package app.krys.bookspaceapp.data.model
 
 import android.os.Parcelable
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import app.krys.bookspaceapp.R
 import com.bumptech.glide.Glide
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
@@ -30,6 +32,7 @@ data class BookInfo(
         fun loadImage(view: ImageView, imageUrl: String?) {
             Glide.with(view.context)
                 .load(imageUrl)
+                .placeholder(ContextCompat.getDrawable(view.context, R.drawable.placeholder_book_img))
                 .into(view)
         }
     }

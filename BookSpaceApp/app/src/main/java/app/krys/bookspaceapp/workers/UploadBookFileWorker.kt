@@ -54,7 +54,6 @@ class UploadBookFileWorker(context: Context, workerParams: WorkerParameters) : C
                 //get downloadUri
                 //set download uri a output
                 return uploadFileToFirebaseStorage(
-                    folderId = folderId!!,
                     bookUri = Uri.parse(bookFileUri),
                     uid = user.uid,
                     bookKey = bookKey!!,
@@ -75,15 +74,13 @@ class UploadBookFileWorker(context: Context, workerParams: WorkerParameters) : C
     }
 
     private suspend fun uploadFileToFirebaseStorage(
-        folderId: String,
         bookUri: Uri,
         uid: String,
         bookKey: String,
         bookName: String?,
         notificationId: Int
     ): Result {
-        //TODO: change path to "folderFiles/$uid/$bookKey.pdf"
-        val fileRef = storage.child("folderFiles/$uid/$folderId/$bookKey.pdf")
+        val fileRef = storage.child("folderFiles/$uid/$bookKey.pdf")
 
         fileRef.putFile(bookUri).addOnProgressListener {
 //            notificationManager?.createProgressiveNotification(

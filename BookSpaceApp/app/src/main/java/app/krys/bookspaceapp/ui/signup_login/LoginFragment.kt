@@ -2,6 +2,7 @@ package app.krys.bookspaceapp.ui.signup_login
 
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -10,6 +11,7 @@ import android.widget.Toast
 import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import app.krys.bookspaceapp.MainActivity
 import app.krys.bookspaceapp.R
 import app.krys.bookspaceapp.databinding.FragmentLoginBinding
 import com.firebase.ui.auth.*
@@ -137,6 +139,11 @@ class LoginFragment : BaseFragment(), View.OnClickListener {
 
                 hideProgressBar()
                 hideKeyboard(requireView())
+                if (it.isSuccessful) {
+                    // Sign in success, move to main activity
+                    findNavController().navigate(R.id.mainActivityDes, null)
+                    requireActivity().finish()
+                }
 
             }.addOnFailureListener {
 
