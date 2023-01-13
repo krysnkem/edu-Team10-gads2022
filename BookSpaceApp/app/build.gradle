@@ -5,6 +5,8 @@ plugins {
     id 'kotlin-parcelize'
     id 'com.google.gms.google-services' // Plugin for google services
     id 'androidx.navigation.safeargs.kotlin'  // Navigation Plugin for safe args
+    //  Social login config for Facebook: local.properties
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 
 }
 
@@ -93,8 +95,6 @@ dependencies {
 
     // FirebaseUI Authentication: Facebook Login
     implementation 'com.facebook.android:facebook-login:15.2.0'
-    // implementation 'com.facebook.android:facebook-login:8.1.0'
-    // implementation 'com.facebook.android:facebook-android-sdk:15.0.1'
 
     //pdf reader libary
     implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'

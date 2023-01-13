@@ -69,13 +69,13 @@
     <string name="confirm">Confirm</string>
     <string name="remove">Remove</string>
 
-    <!-- Social login config for Google, Facebook, and ...   -->
-    <style name="SHA1">66:C5:D4:23:0E:11:E7:E9:8F:A8:31:FF:4F:48:5C:6D:65:5F:51:FD</style>
+    <!-- Social login config for Google, Facebook, and Twitter   -->
+        <!-- Social login config for Facebook   -->
     <string name="facebook_application_id">696268765482541</string>
     <string name="facebook_login_protocol_scheme">fb696268765482541</string>
-    <!-- Linked to AndroidManifest.xml file -->
-    <string name="facebook_client_token">b011fc0b73f6ea4ebd92175d41cc0714</string>
-<!--    3182b1b9bda806eea1e51bbda417387a8443cf8c-->
+        <!-- Social login config for Twitter   -->
+    <string name="twitter_consumer_key">ZJWuHolJ9iIudQoKqc6fRHuy9</string>
+    <string name="twitter_consumer_secret">ZJqvC8fF84OXyhwovzihidmWdyBjvzeNjdAO5ivD7mavKmVmpS</string>
 
     <string name="next">Next</string>
     <string name="previous">Previous</string>

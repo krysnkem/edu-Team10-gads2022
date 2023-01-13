@@ -23,7 +23,8 @@
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="33">
 
-        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+        <meta-data android:name="com.facebook.sdk.ClientToken"
+            android:value="${FACEBOOK_CLIENT_TOKEN}"/>
 
         <activity
             android:name=".ui.signup_login.SignUpLoginActivity"

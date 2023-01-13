@@ -4,9 +4,12 @@ package app.krys.bookspaceapp.ui.signup_login
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
+import app.krys.bookspaceapp.BuildConfig
 import app.krys.bookspaceapp.databinding.ActivitySignUpLoginBinding
 import app.krys.bookspaceapp.ui.account.settings.ResetPasswordDialogFragment
 
@@ -32,6 +35,7 @@ class SignUpLoginActivity : AppCompatActivity(), IItems {
         }
 
         // keyHash()
+        // enableStrictMode()
     }
 
     /**@SuppressLint("PackageManagerGetSignatures")
@@ -53,6 +57,27 @@ class SignUpLoginActivity : AppCompatActivity(), IItems {
     Log.d("SignUpLoginActivity","Error ${e.message} ::: $e")
     }
     }*/
+
+
+
+    /** Watches for undesired operations, like long running operations, that might impact the MainThread
+     * and enforce penalties */
+    private fun enableStrictMode() {
+        if (BuildConfig.DEBUG) {
+            val policy = StrictMode.ThreadPolicy.Builder()
+                /*.detectDiskReads()
+                .detectDiskWrites()
+                .detectNetwork()*/
+                .detectAll()
+                /*.penaltyDialog()
+                .penaltyDeath()*/ // Comes last in penalties chain
+                .penaltyLog()
+                .build()
+
+            StrictMode.setThreadPolicy(policy)
+        }
+    }
+
 
 
     /** START: Reset Password Section */
